@@ -1,14 +1,44 @@
 const tmi = require('tmi.js');
 const config = require('config');
+const sql = require('mssql');
 
 // Define configuration options
 const opts = {
   identity: {
-    username: config.get('username'),
-    password: config.get('password')
+    username: config.get('twitchConfig.username'),
+    password: config.get('twitchConfig.password')
   },
-  channels: config.get('channels')
+  channels: config.get('twitchConfig.channels')
 };
+
+const sqlConfig = {
+  user: config.get('dbConfig.user'),
+  password: config.get('dbConfig.password'),
+  database: config.get('dbConfig.database'),
+  server: config.get('dbConfig.server'),
+  pool: {
+    max: 10,
+    min: 0,
+    idleTimeoutMillis: 30000
+  },
+  options: {
+    encrypt: false, // for azure
+    trustServerCertificate: true // change to true for local dev / self-signed certs
+  }
+};
+
+sql.connect(sqlConfig).then(pool => {
+  // Query
+  
+  return pool.request()
+      .input('input_parameter', sql.Int, 1)
+      .query('select * from Test where Id = @input_parameter');
+}).then(result => {
+  console.dir(result);
+}).catch(err => {
+  console.log(err);
+// ... error checks
+});
 
 // Create a client with our options
 const client = new tmi.client(opts);
@@ -23,7 +53,7 @@ client.connect();
 // Called every time a message comes in
 function onMessageHandler (target, userState, msg, self) {
   if (self) { return; } // Ignore messages from the bot
-  if (msg[0] !== '!') { return }
+  if (msg[0] !== '-') { return }
 
   const isBroadcaster = userState.badges !== null && userState.badges.broadcaster !== null;
   const isModerator = userState.mod !== null && userState.mod;
@@ -36,14 +66,12 @@ function onMessageHandler (target, userState, msg, self) {
   const commandName = msg.trim();
 
   // If the command is known, let's execute it
-  if (commandName === '!dice') {
+  if (commandName === '-dice') {
     const num = rollDice();
     client.say(target, `You rolled a ${num}`);
     console.log(`* Executed ${commandName} command`);
-  } else if (commandName === '!randomboss') {
-
-    const boss = randomWorldBoss();
-    client.say(target, `${boss}`)
+  } else if (commandName === '-randomboss') {
+    randomWorldBoss(target);
     console.log(`* Executed ${commandName} command`);
   }
   else {
@@ -58,43 +86,23 @@ function rollDice () {
 }
 
 // Function that returns a random world boss
-function randomWorldBoss () {
-    const bosses = [
-        'Anemo Hypostasis',
-        'Cryo Hypostasis',
-        'Cryo Regisvine',
-        'Electro Hypostasis',
-        'Geo Hypostasis',
-        'Oceanid',
-        'Primo Geovishap',
-        'Pyro Regisvine',
-        'Ruin Serpent',
-        'Bathysmal Vishap Herd',
-        'Golden Wolflord',
-        'Hydro Hypostasis',
-        'Maguu Kenki',
-        'Perpetual Mechanical Array',
-        'Pyro Hypostasis',
-        'Thunder Manifestation',
-        'Jadeplume Terrorshroom',
-        'Electro Regisvine',
-        'Aeonblight Drake',
-        'Algorithm of Semi-Intransient Matrix of Overseer Network',
-        'Dendro Hypostasis',
-        'Setekh Wenut',
-        'Iniquitous Baptist',
-        'Icewind Suite: Dirge of Coppelia',
-        'Icewind Suite: Nemesis of Coppelius',
-        'Emperor of Fire and Iron',
-        'Experimental Field Generator',
-        'Millennial Pearl Seahorse',
-        'Hydro Tulpa'
-    ];
-
-    const randomNumber = Math.floor(Math.random() * bosses.length);
-
-    const chosenBoss = bosses[randomNumber];
-    return chosenBoss;
+function randomWorldBoss (target) {
+  sql.connect(sqlConfig).then(pool => {
+    // Query
+    
+    return pool.request()
+        .query('select * from Bosses');
+  }).then(result => {
+    console.dir(result);
+    const recordSet = result.recordset;
+    const randomNumber = Math.floor(Math.random() * recordSet.length);
+    const chosenBoss = recordSet[randomNumber];
+    client.say(target, `${chosenBoss.Id}: ${chosenBoss.BossName}`)
+  }).catch(err => {
+    console.log(err);
+    client.say(target, '¯\\_(ツ)_/¯');
+  // ... error checks
+  });
 }
 
 // Called every time the bot connects to Twitch chat
