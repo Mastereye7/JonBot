@@ -1,6 +1,7 @@
 const tmi = require('tmi.js');
 const config = require('config');
 const sql = require('mssql');
+console.log(`Jon Bot Version ${require("./package").version}`)
 
 // Define configuration options
 const opts = {
