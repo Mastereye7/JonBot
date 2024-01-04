@@ -59,6 +59,8 @@ function onMessageHandler(target, userState, msg, self) {
   const isModerator = userState.mod !== null && userState.mod;
 
   if (!isBroadcaster && !isModerator) { return; }
+  const enableRemoteCommands = config.get('enableRemoteCommands');
+  if (enableRemoteCommands && target === '#twitchjonbot') target = '#kitsuuchu';
 
   // Remove whitespace from chat message
   const message = msg.trim();
@@ -139,7 +141,7 @@ function addWheelSpin(target, userName, amountToAdd) {
         `);
   }).then(result => {
     console.dir(result);
-    client.say(target, `${userName} gained spins pog [+${valueToAdd}]`);
+    client.say(target, `${userName} gained spins [+${valueToAdd}]`);
   }).catch(err => {
     console.log(err);
     client.say(target, '¯\\_(ツ)_/¯');
@@ -165,7 +167,7 @@ function removeWheelSpin(target, userName, amountToRemove) {
         INSERT (Username, WheelSpins) VALUES (source.Username, 0);`);
   }).then(result => {
     console.dir(result);
-    client.say(target, `${userName} spent spins pog [-${valueToRemove}]`);
+    client.say(target, `${userName} spent spins [-${valueToRemove}]`);
   }).catch(err => {
     console.log(err);
     client.say(target, '¯\\_(ツ)_/¯');
