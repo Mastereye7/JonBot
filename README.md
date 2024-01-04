@@ -1,6 +1,6 @@
 # Jon Bot
 
-Bot created to listen to and integrate with Twitch chat.
+Bot created to listen to and integrate with Twitch chat.\
 Version: 1.3.0
 
 ## Description
@@ -24,25 +24,26 @@ Wheel related:
 
 ### -randomboss
 
-List of potential bosses is gotten from a local database. Jon maintains this database
+List of potential bosses is gotten from a local database.\
+Jon maintains this database
 
 ### Wheel spin commands
 #### -spins {@userName}
-Shows the spins available for @user.
+Shows the spins available for @user.\
 @userName: Required, could be plain text userName or tag (@) (ex. @TwitchJonBot)
 
 #### -add {@userName} {opt: amountToAdd = 1}
-Adds an amount of spins to a @user.
-If user does not exist in database, creates the user.
-@userName: 
-    Required - Could be plain text userName or tag (@) (ex. @TwitchJonBot)
-amountToAdd: 
+Adds an amount of spins to a @user.\
+If user does not exist in database, creates the user.\
+@userName:\
+    Required - Could be plain text userName or tag (@) (ex. @TwitchJonBot)\
+amountToAdd:\
     Optional - Positive integer number of spins to add to @userName (ex. 4)
 
 #### -rm {@userName} {opt: amountToRemove = 1}
-Spends an amount of spins of a @user.
-If user does not exist in database, creates user with 0 spins.
-@userName: Required - Could be plain text userName or tag (@) (ex. @TwitchJonBot)
+Spends an amount of spins of a @user.\
+If user does not exist in database, creates user with 0 spins.\
+@userName: Required - Could be plain text userName or tag (@) (ex. @TwitchJonBot)\
 amountToRemove: Optional - Positive integer number of spins to spend of @userName (ex. 3)
 
 ## Getting Started
