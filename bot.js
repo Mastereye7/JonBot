@@ -27,18 +27,18 @@ const sqlConfig = {
   }
 };
 
-sql.connect(sqlConfig).then(pool => {
-  // Query
+// sql.connect(sqlConfig).then(pool => {
+//   // Query
   
-  return pool.request()
-      .input('input_parameter', sql.Int, 1)
-      .query('select * from Test where Id = @input_parameter');
-}).then(result => {
-  console.dir(result);
-}).catch(err => {
-  console.log(err);
-// ... error checks
-});
+//   return pool.request()
+//       .input('input_parameter', sql.Int, 1)
+//       .query('select * from Test where Id = @input_parameter');
+// }).then(result => {
+//   console.dir(result);
+// }).catch(err => {
+//   console.log(err);
+// // ... error checks
+// });
 
 // Create a client with our options
 const client = new tmi.client(opts);
