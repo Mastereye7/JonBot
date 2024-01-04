@@ -81,7 +81,8 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
-
+* 1.3.1
+    * Fix -spins just showing 0 spins
 * 1.3
     * Added wheel spin commands (-add, -rm, -spins)
     * Added arguments to inputs

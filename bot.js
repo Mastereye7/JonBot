@@ -183,8 +183,8 @@ function checkWheelSpins(target, userName){
   }).then(result => {
     console.dir(result);
     const recordset = result.recordset;
-    const spins = 0;
-    if (!recordset[0] == null) {
+    let spins = 0;
+    if (recordset.length > 0) {
       spins = recordset[0].WheelSpins;
     }
     client.say(target, `${userName} spins: [${spins}]`);
