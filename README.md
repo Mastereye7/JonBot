@@ -18,6 +18,8 @@ An in-depth paragraph about your project and overview of use.
 
 ### !randomboss
 List of potential bosses:
+```
+    const bosses = [
         'Anemo Hypostasis',
         'Cryo Hypostasis',
         'Cryo Regisvine',
@@ -47,6 +49,9 @@ List of potential bosses:
         'Experimental Field Generator',
         'Millennial Pearl Seahorse',
         'Hydro Tulpa'
+    ];
+```
+        
 
 ## Getting Started
 
