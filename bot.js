@@ -10,6 +10,38 @@ const opts = {
   channels: config.get('channels')
 };
 
+console.log('reached here');
+const sql = require('mssql');
+const sqlConfig = {
+  user: 'jonbot',
+  password: 'PMCw3Esuv#!AZv',
+  database: 'JonBot',
+  server: 'JON-DESKTOP',
+  pool: {
+    max: 10,
+    min: 0,
+    idleTimeoutMillis: 30000
+  },
+  options: {
+    encrypt: false, // for azure
+    trustServerCertificate: true // change to true for local dev / self-signed certs
+  }
+};
+
+sql.connect(sqlConfig);
+
+async () => {
+ try {
+  // make sure that any items are correctly URL encoded in the connection string
+  console.log('Trying mssql...');
+  await sql.connect(sqlConfig);
+  const result = await sql.query`select * from JonBot where id = 1`;
+  console.dir(result);
+ } catch (err) {
+  // ... error checks
+ }
+};
+
 // Create a client with our options
 const client = new tmi.client(opts);
 
