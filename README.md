@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.\
-Version: 1.3.1
+Version: 1.4
 
 ## Description
 
@@ -12,6 +12,7 @@ An in-depth paragraph about your project and overview of use.
 - Commands called in chat with '-'
 - Checks whether the caller is a broadcaster or a moderator
 - MSSQL Database for writing and reading data
+- Remotely send commands through other channel chats
 
 ## Available commands
 
@@ -59,6 +60,28 @@ amountToRemove: Optional - Positive integer number of spins to spend of @userNam
 
 - Make sure to create a /config folder with a default.json file to run the software.
 
+#### Config
+```
+{
+    "twitchConfig":{
+        "username": "string",
+        "password": "string", //ex.: "oauth:{token}"
+        "channels": 
+        [
+            "string",
+            "string"
+        ]
+    },
+    "dbConfig":{
+        "user": "string",
+        "password": "string",
+        "database": "string",
+        "server": "string"
+    },
+    "enableRemoteCommands": boolean
+}
+```
+
 ### Executing program
 
 * How to run the program
@@ -81,6 +104,10 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
+* 1.4
+    * Added ability to remotely send commands through another channel chat
+    * Added enableRemoteCommands config
+    * Removed "pog" from command results
 * 1.3.1
     * Fix -spins just showing 0 spins
 * 1.3
