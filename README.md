@@ -32,7 +32,7 @@ Jon maintains this database
 Shows the spins available for @user.\
 @userName: Required, could be plain text userName or tag (@) (ex. @TwitchJonBot)
 
-#### -add {@userName} {opt: amountToAdd = 1}
+#### -add {@userName} opt: {amountToAdd = 1}
 Adds an amount of spins to a @user.\
 If user does not exist in database, creates the user.\
 @userName:\
@@ -40,7 +40,7 @@ If user does not exist in database, creates the user.\
 amountToAdd:\
     Optional - Positive integer number of spins to add to @userName (ex. 4)
 
-#### -rm {@userName} {opt: amountToRemove = 1}
+#### -rm {@userName} opt: {amountToRemove = 1}
 Spends an amount of spins of a @user.\
 If user does not exist in database, creates user with 0 spins.\
 @userName: Required - Could be plain text userName or tag (@) (ex. @TwitchJonBot)\
