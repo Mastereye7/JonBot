@@ -1,6 +1,7 @@
 # Jon Bot
 
-Bot created to listen to and integrate with Twitch chat.
+Bot created to listen to and integrate with Twitch chat.\
+Version: 1.3
 
 ## Description
 
@@ -15,11 +16,34 @@ An in-depth paragraph about your project and overview of use.
 ## Available commands
 
 * -dice - Picks a random number from 1-6
-* -randomboss - Picks a random Genshin world boss from a list. 
+* -randomboss - Picks a random Genshin world boss from a list.
+* -spins - Shows wheel spins a user has.
+* -add - Adds spins to the wheel spins of a user.
+* -rm - Spends spins of the wheel of a user.
 
 ### -randomboss
+Picks a random world boss in Genshin Impact and prints it out to the chat.
+List of potential bosses is gotten from a local database.\
+Jon maintains this database
 
-List of potential bosses is gotten from a local database. Jon maintains this database
+### Wheel spin commands
+#### -spins {@userName}
+Shows the spins available for @user.\
+@userName: Required, could be plain text userName or tag (@) (ex. @TwitchJonBot)
+
+#### -add {@userName} opt: {amountToAdd = 1}
+Adds an amount of spins to a @user.\
+If user does not exist in database, creates the user.\
+@userName:\
+    Required - Could be plain text userName or tag (@) (ex. @TwitchJonBot)\
+amountToAdd:\
+    Optional - Positive integer number of spins to add to @userName (ex. 4)
+
+#### -rm {@userName} opt: {amountToRemove = 1}
+Spends an amount of spins of a @user.\
+If user does not exist in database, creates user with 0 spins.\
+@userName: Required - Could be plain text userName or tag (@) (ex. @TwitchJonBot)\
+amountToRemove: Optional - Positive integer number of spins to spend of @userName (ex. 3)
 
 ## Getting Started
 
@@ -58,6 +82,10 @@ Contributors names and contact info
 
 ## Version History
 
+* 1.3
+    * Added wheel spin commands (-add, -rm, -spins)
+    * Added arguments to inputs
+    * Fixed program crashing when logic fails
 * 1.2
     * Added MSSQL database connection
     * Changed config file to contain properties with hierarchy
