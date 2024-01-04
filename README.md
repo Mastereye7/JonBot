@@ -23,7 +23,7 @@ Wheel related:
 * -rm - Spends spins of the wheel of a user.
 
 ### -randomboss
-
+Picks a random world boss in Genshin Impact and prints it out to the chat.
 List of potential bosses is gotten from a local database.\
 Jon maintains this database
 
