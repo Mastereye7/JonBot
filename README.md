@@ -46,7 +46,7 @@ If user does not exist in database, creates the user.
 | amountToAdd | Optional | Positive integer number of spins to add to @userName (ex. 4) |
 
 #### `-rm {@userName} opt: {amountToRemove = 1}`
-Example: `-rm @TwitchJonBot 6`
+Example: `-rm @TwitchJonBot 6`\
 Spends an amount of spins of a @user.\
 If user does not exist in database, creates user with 0 spins.
 | Parameter | Required? | Description |
