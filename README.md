@@ -8,45 +8,18 @@ An in-depth paragraph about your project and overview of use.
 
 ## Features
 
-- Commands called in chat with '!'
-- Checks whether the caller is a broadcaster or a moderator.
+- Commands called in chat with '-'
+- Checks whether the caller is a broadcaster or a moderator
+- MSSQL Database for writing and reading data
 
 ## Available commands
 
-* !dice - Picks a random number from 1-6
-* !randomboss - Picks a random Genshin world boss from a static list. 
+* -dice - Picks a random number from 1-6
+* -randomboss - Picks a random Genshin world boss from a list. 
 
-### !randomboss
-List of potential bosses:
-        'Anemo Hypostasis',
-        'Cryo Hypostasis',
-        'Cryo Regisvine',
-        'Electro Hypostasis',
-        'Geo Hypostasis',
-        'Oceanid',
-        'Primo Geovishap',
-        'Pyro Regisvine',
-        'Ruin Serpent',
-        'Bathysmal Vishap Herd',
-        'Golden Wolflord',
-        'Hydro Hypostasis',
-        'Maguu Kenki',
-        'Perpetual Mechanical Array',
-        'Pyro Hypostasis',
-        'Thunder Manifestation',
-        'Jadeplume Terrorshroom',
-        'Electro Regisvine',
-        'Aeonblight Drake',
-        'Algorithm of Semi-Intransient Matrix of Overseer Network',
-        'Dendro Hypostasis',
-        'Setekh Wenut',
-        'Iniquitous Baptist',
-        'Icewind Suite: Dirge of Coppelia',
-        'Icewind Suite: Nemesis of Coppelius',
-        'Emperor of Fire and Iron',
-        'Experimental Field Generator',
-        'Millennial Pearl Seahorse',
-        'Hydro Tulpa'
+### -randomboss
+
+List of potential bosses is gotten from a local database. Jon maintains this database
 
 ## Getting Started
 
@@ -81,10 +54,14 @@ command to run if program contains helper info
 
 Contributors names and contact info
 
-ex. [@Mastereye7](https://twitter.com/Mastereye7)
+[@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
 
+* 1.2
+    * Added MSSQL database connection
+    * Changed config file to contain properties with hierarchy
+    * Changed prefix command to '-'
 * 1.1
     * Added !randomboss command which randomises a random Genshin world boss
     * Checks whether message sender is the broadcaster or a moderator
