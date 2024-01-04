@@ -22,29 +22,37 @@ An in-depth paragraph about your project and overview of use.
 * -add - Adds spins to the wheel spins of a user.
 * -rm - Spends spins of the wheel of a user.
 
-### -randomboss
-Picks a random world boss in Genshin Impact and prints it out to the chat.
+### `-randomboss`
+Example: `-randomboss`\
+Picks a random world boss in Genshin Impact and prints it out to the chat.\
 List of potential bosses is gotten from a local database.\
 Jon maintains this database
 
 ### Wheel spin commands
-#### -spins {@userName}
-Shows the spins available for @user.\
-@userName: Required, could be plain text userName or tag (@) (ex. @TwitchJonBot)
+#### `-spins {@userName}`
+Example: `-spins @TwitchJonBot`\
+Shows the spins available for @user.
+| Parameter | Required? | Description |
+| --------- | --------- | ----------- |
+| @userName | Required | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
 
-#### -add {@userName} opt: {amountToAdd = 1}
+#### `-add {@userName} opt: {amountToAdd = 1}`
+Example: `-add @TwitchJobBot 5`\
 Adds an amount of spins to a @user.\
-If user does not exist in database, creates the user.\
-@userName:\
-    Required - Could be plain text userName or tag (@) (ex. @TwitchJonBot)\
-amountToAdd:\
-    Optional - Positive integer number of spins to add to @userName (ex. 4)
+If user does not exist in database, creates the user.
+| Parameter | Required? | Description |
+| --------- | --------- | ----------- |
+| @userName | Required | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
+| amountToAdd | Optional | Positive integer number of spins to add to @userName (ex. 4) |
 
-#### -rm {@userName} opt: {amountToRemove = 1}
+#### `-rm {@userName} opt: {amountToRemove = 1}`
+Example: `-rm @TwitchJonBot 6`
 Spends an amount of spins of a @user.\
-If user does not exist in database, creates user with 0 spins.\
-@userName: Required - Could be plain text userName or tag (@) (ex. @TwitchJonBot)\
-amountToRemove: Optional - Positive integer number of spins to spend of @userName (ex. 3)
+If user does not exist in database, creates user with 0 spins.
+| Parameter | Required? | Description |
+| --------- | --------- | ----------- |
+| @userName | Required  | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
+| amountToRemove | Optional | Positive integer number of spins to spend of @userName (ex. 3) |
 
 ## Getting Started
 
@@ -61,7 +69,7 @@ amountToRemove: Optional - Positive integer number of spins to spend of @userNam
 - Make sure to create a /config folder with a default.json file to run the software.
 
 #### Config
-```
+```json
 {
     "twitchConfig":{
         "username": "string",
