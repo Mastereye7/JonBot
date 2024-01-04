@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.\
-Version: 1.3.0
+Version: 1.3
 
 ## Description
 
@@ -16,7 +16,7 @@ An in-depth paragraph about your project and overview of use.
 ## Available commands
 
 * -dice - Picks a random number from 1-6
-* -randomboss - Picks a random Genshin world boss from a list.
+* -randomboss - Picks a random Genshin world boss from a list.\
 Wheel related: 
 * -spins - Shows wheel spins a user has.
 * -add - Adds spins to the wheel spins of a user.
