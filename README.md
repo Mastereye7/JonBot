@@ -16,21 +16,21 @@ An in-depth paragraph about your project and overview of use.
 
 ## Available commands
 
-* -dice<br>
+* **-dice**<br>
 Picks a random number from 1-6
-* -randomboss<br>
+* **-randomboss**<br>
 Picks a random Genshin world boss from a list.
-* -spins @user<br>
+* **-spins @user**<br>
 Shows wheel spins a user has.
-* -add @user<br>
+* **-add @user**<br>
 Adds 1 spin to the wheel spins of a user.
-* -add @user (amount)<br>
+* **-add @user (amount)**<br>
 Adds amount of spins to the wheel spins of a user.
-* -rm @user<br>
+* **-rm @user**<br>
 Spends 1 spin of the wheel for a user.
-* -rm @user (amount)<br>
+* **-rm @user (amount)**<br>
 Spends an amount of spins of the wheel for a user.
-* -timer (name) (minutes)<br>
+* **-timer (name) (minutes)**<br>
 Sets a named timer in minutes.
 
 ### `-randomboss`
