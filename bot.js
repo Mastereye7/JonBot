@@ -61,7 +61,7 @@ function onMessageHandler(target, userState, msg, self) {
 
   if (!isBroadcaster && !isModerator) { return; }
   const enableRemoteCommands = config.get('enableRemoteCommands');
-  if (enableRemoteCommands && target === '#twitchjonbot') target = '#kitsuuchu';
+  if (enableRemoteCommands && target === config.get('remoteFromChannel')) target = config.get('remoteToChannel');
 
   // Remove whitespace from chat message
   const message = msg.trim();
