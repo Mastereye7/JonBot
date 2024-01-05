@@ -86,6 +86,10 @@ function onMessageHandler(target, userState, msg, self) {
     } else if (commandName === '-spins') {
       const userName = splitMessage[1].replace('@', '');
       checkWheelSpins(target, userName)
+    } else if (commandName === '-timer'){
+      const nameOfTimer = splitMessage[1];
+      const minutesToWait = splitMessage[2];
+      setTimeout(signalTimerEnd, minutesToWait * 1000 * 60, target, nameOfTimer);
     }
     else {
       console.log(`* Unknown command ${commandName}`);
@@ -196,6 +200,11 @@ function checkWheelSpins(target, userName){
     client.say(target, '¯\\_(ツ)_/¯');
     // ... error checks
   });
+}
+
+function signalTimerEnd(target, name){
+  console.log(`Timer ${name} has ended`);
+  client.say(target, `Timer ${name} has ended`);
 }
 
 // Called every time the bot connects to Twitch chat

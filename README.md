@@ -21,9 +21,11 @@ An in-depth paragraph about your project and overview of use.
 * -spins - Shows wheel spins a user has.
 * -add - Adds spins to the wheel spins of a user.
 * -rm - Spends spins of the wheel of a user.
+* -timer - Sets a timer in minutes.
 
 ### `-randomboss`
 Example: `-randomboss`\
+Output: `1: Anemo Hypostasis`\
 Picks a random world boss in Genshin Impact and prints it out to the chat.\
 List of potential bosses is gotten from a local database.\
 Jon maintains this database
@@ -31,28 +33,40 @@ Jon maintains this database
 ### Wheel spin commands
 #### `-spins {@userName}`
 Example: `-spins @TwitchJonBot`\
+Output: `TwitchJonBot spins: [4]`\
 Shows the spins available for @user.
 | Parameter | Required? | Description |
 | --------- | --------- | ----------- |
-| @userName | Required | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
+| @userName | Yes | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
 
 #### `-add {@userName} opt: {amountToAdd = 1}`
 Example: `-add @TwitchJobBot 5`\
+Output: `TwitchJonBot gains spins [+5]`\
 Adds an amount of spins to a @user.\
 If user does not exist in database, creates the user.
 | Parameter | Required? | Description |
 | --------- | --------- | ----------- |
-| @userName | Required | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
-| amountToAdd | Optional | Positive integer number of spins to add to @userName (ex. 4) |
+| @userName | Yes | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
+| amountToAdd | No | Positive integer number of spins to add to @userName (ex. 4) |
 
 #### `-rm {@userName} opt: {amountToRemove = 1}`
 Example: `-rm @TwitchJonBot 6`\
+Output: `TwitchJonBot spends spins [-6]`\
 Spends an amount of spins of a @user.\
 If user does not exist in database, creates user with 0 spins.
 | Parameter | Required? | Description |
 | --------- | --------- | ----------- |
-| @userName | Required  | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
-| amountToRemove | Optional | Positive integer number of spins to spend of @userName (ex. 3) |
+| @userName | Yes  | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
+| amountToRemove | No | Positive integer number of spins to spend of @userName (ex. 3) |
+
+### `-timer {nameOfTimer} {minutesToDelay}`
+Example: `-timer MyTimer 1`\
+Output: `Timer MyTimer had ended`\
+Sets a timer with a certain amount of time. When timer ends, bot chats the timer name ending.
+| Parameter | Required? | Description |
+| --------- | --------- | ----------- |
+| nameOfTimer | Yes | Name of the timer to start. Cannot have any spaces. (ex. MyTimer) |
+| minutesToDelay |  Yes | Amount of minutes to wait. Decimals are okay (ex. 5, 0.5, 2) |
 
 ## Getting Started
 
@@ -69,11 +83,13 @@ If user does not exist in database, creates user with 0 spins.
 - Make sure to create a /config folder with a default.json file to run the software.
 
 #### Config
+<details>
+<summary>Default config</summary>
 ```json
 {
     "twitchConfig":{
         "username": "string",
-        "password": "string", //ex.: "oauth:{token}"
+        "password": "oauth:{token}",
         "channels": 
         [
             "string",
@@ -86,9 +102,12 @@ If user does not exist in database, creates user with 0 spins.
         "database": "string",
         "server": "string"
     },
-    "enableRemoteCommands": boolean
+    "enableRemoteCommands": boolean,
+    "remoteFromChannel": "#{channel}",
+    "remoteToChannel": "#{channel}"
 }
 ```
+</details>
 
 ### Executing program
 
@@ -113,6 +132,9 @@ Contributors names and contact info
 
 ## Version History
 * 1.5.0
+    * Added config for remote chat commands (#6)
+    * Add command -timer (#11)
+    * Change readme with outputs of commands
 * 1.4
     * Added ability to remotely send commands through another channel chat
     * Added enableRemoteCommands config
