@@ -18,10 +18,10 @@ An in-depth paragraph about your project and overview of use.
 
 * -dice - Picks a random number from 1-6
 * -randomboss - Picks a random Genshin world boss from a list.
-* -spins - Shows wheel spins a user has.
-* -add - Adds spins to the wheel spins of a user.
-* -rm - Spends spins of the wheel of a user.
-* -timer - Sets a timer in minutes.
+* -spins @user - Shows wheel spins a user has.
+* -add @user amount - Adds spins to the wheel spins of a user.
+* -rm @user amount - Spends spins of the wheel of a user.
+* -timer name minutes - Sets a timer in minutes.
 
 ### `-randomboss`
 Example: `-randomboss`\
