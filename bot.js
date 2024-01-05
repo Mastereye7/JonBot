@@ -1,6 +1,7 @@
 const tmi = require('tmi.js');
 const config = require('config');
 const sql = require('mssql');
+console.log(`Jon Bot Version ${require("./package").version}`)
 
 // Define configuration options
 const opts = {
@@ -59,6 +60,8 @@ function onMessageHandler(target, userState, msg, self) {
   const isModerator = userState.mod !== null && userState.mod;
 
   if (!isBroadcaster && !isModerator) { return; }
+  const enableRemoteCommands = config.get('enableRemoteCommands');
+  if (enableRemoteCommands && target === config.get('remoteFromChannel')) target = config.get('remoteToChannel');
 
   // Remove whitespace from chat message
   const message = msg.trim();
@@ -83,6 +86,10 @@ function onMessageHandler(target, userState, msg, self) {
     } else if (commandName === '-spins') {
       const userName = splitMessage[1].replace('@', '');
       checkWheelSpins(target, userName)
+    } else if (commandName === '-timer'){
+      const nameOfTimer = splitMessage[1];
+      const minutesToWait = splitMessage[2];
+      setTimeout(signalTimerEnd, minutesToWait * 1000 * 60, target, nameOfTimer);
     }
     else {
       console.log(`* Unknown command ${commandName}`);
@@ -139,7 +146,7 @@ function addWheelSpin(target, userName, amountToAdd) {
         `);
   }).then(result => {
     console.dir(result);
-    client.say(target, `${userName} gained spins pog [+${valueToAdd}]`);
+    client.say(target, `${userName} gained spins [+${valueToAdd}]`);
   }).catch(err => {
     console.log(err);
     client.say(target, '¯\\_(ツ)_/¯');
@@ -165,7 +172,7 @@ function removeWheelSpin(target, userName, amountToRemove) {
         INSERT (Username, WheelSpins) VALUES (source.Username, 0);`);
   }).then(result => {
     console.dir(result);
-    client.say(target, `${userName} spent spins pog [-${valueToRemove}]`);
+    client.say(target, `${userName} spent spins [-${valueToRemove}]`);
   }).catch(err => {
     console.log(err);
     client.say(target, '¯\\_(ツ)_/¯');
@@ -193,6 +200,11 @@ function checkWheelSpins(target, userName){
     client.say(target, '¯\\_(ツ)_/¯');
     // ... error checks
   });
+}
+
+function signalTimerEnd(target, name){
+  console.log(`Timer ${name} has ended`);
+  client.say(target, `Timer ${name} has ended`);
 }
 
 // Called every time the bot connects to Twitch chat

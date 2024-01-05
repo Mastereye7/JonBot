@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.\
-Version: 1.3.1
+Version: 1.5.0
 
 ## Description
 
@@ -12,38 +12,61 @@ An in-depth paragraph about your project and overview of use.
 - Commands called in chat with '-'
 - Checks whether the caller is a broadcaster or a moderator
 - MSSQL Database for writing and reading data
+- Remotely send commands through other channel chats
 
 ## Available commands
 
 * -dice - Picks a random number from 1-6
 * -randomboss - Picks a random Genshin world boss from a list.
-* -spins - Shows wheel spins a user has.
-* -add - Adds spins to the wheel spins of a user.
-* -rm - Spends spins of the wheel of a user.
+* -spins @user - Shows wheel spins a user has.
+* -add @user amount - Adds spins to the wheel spins of a user.
+* -rm @user amount - Spends spins of the wheel of a user.
+* -timer name minutes - Sets a timer in minutes.
 
-### -randomboss
-Picks a random world boss in Genshin Impact and prints it out to the chat.
+### `-randomboss`
+Example: `-randomboss`\
+Output: `1: Anemo Hypostasis`\
+Picks a random world boss in Genshin Impact and prints it out to the chat.\
 List of potential bosses is gotten from a local database.\
 Jon maintains this database
 
 ### Wheel spin commands
-#### -spins {@userName}
-Shows the spins available for @user.\
-@userName: Required, could be plain text userName or tag (@) (ex. @TwitchJonBot)
+#### `-spins {@userName}`
+Example: `-spins @TwitchJonBot`\
+Output: `TwitchJonBot spins: [4]`\
+Shows the spins available for @user.
+| Parameter | Required? | Description |
+| --------- | --------- | ----------- |
+| @userName | Yes | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
 
-#### -add {@userName} opt: {amountToAdd = 1}
+#### `-add {@userName} opt: {amountToAdd = 1}`
+Example: `-add @TwitchJobBot 5`\
+Output: `TwitchJonBot gains spins [+5]`\
 Adds an amount of spins to a @user.\
-If user does not exist in database, creates the user.\
-@userName:\
-    Required - Could be plain text userName or tag (@) (ex. @TwitchJonBot)\
-amountToAdd:\
-    Optional - Positive integer number of spins to add to @userName (ex. 4)
+If user does not exist in database, creates the user.
+| Parameter | Required? | Description |
+| --------- | --------- | ----------- |
+| @userName | Yes | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
+| amountToAdd | No | Positive integer number of spins to add to @userName (ex. 4) |
 
-#### -rm {@userName} opt: {amountToRemove = 1}
+#### `-rm {@userName} opt: {amountToRemove = 1}`
+Example: `-rm @TwitchJonBot 6`\
+Output: `TwitchJonBot spends spins [-6]`\
 Spends an amount of spins of a @user.\
-If user does not exist in database, creates user with 0 spins.\
-@userName: Required - Could be plain text userName or tag (@) (ex. @TwitchJonBot)\
-amountToRemove: Optional - Positive integer number of spins to spend of @userName (ex. 3)
+If user does not exist in database, creates user with 0 spins.
+| Parameter | Required? | Description |
+| --------- | --------- | ----------- |
+| @userName | Yes  | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
+| amountToRemove | No | Positive integer number of spins to spend of @userName (ex. 3) |
+
+### `-timer {nameOfTimer} {minutesToDelay}`
+Example: `-timer MyTimer 1`\
+Output: `Timer MyTimer had ended`\
+Sets a timer with a certain amount of time. When timer ends, bot chats the timer name ending.
+| Parameter | Required? | Description |
+| --------- | --------- | ----------- |
+| nameOfTimer | Yes | Name of the timer to start. Cannot have any spaces. (ex. MyTimer) |
+| minutesToDelay |  Yes | Amount of minutes to wait. Decimals are okay (ex. 5, 0.5, 2) |
 
 ## Getting Started
 
@@ -58,6 +81,30 @@ amountToRemove: Optional - Positive integer number of spins to spend of @userNam
 * Any modifications needed to be made to files/folders
 
 - Make sure to create a /config folder with a default.json file to run the software.
+
+#### Config
+```json
+{
+    "twitchConfig":{
+        "username": "string",
+        "password": "oauth:{token}",
+        "channels": 
+        [
+            "string",
+            "string"
+        ]
+    },
+    "dbConfig":{
+        "user": "string",
+        "password": "string",
+        "database": "string",
+        "server": "string"
+    },
+    "enableRemoteCommands": false,
+    "remoteFromChannel": "#{channel}",
+    "remoteToChannel": "#{channel}"
+}
+```
 
 ### Executing program
 
@@ -81,6 +128,14 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
+* 1.5.0
+    * Added config for remote chat commands (#6)
+    * Add command -timer (#11)
+    * Change readme with outputs of commands
+* 1.4
+    * Added ability to remotely send commands through another channel chat
+    * Added enableRemoteCommands config
+    * Removed "pog" from command results
 * 1.3.1
     * Fix -spins just showing 0 spins
 * 1.3

@@ -1,6 +1,6 @@
 {
   "name": "jonbot",
-  "version": "1.3.1",
+  "version": "1.5.0",
   "description": "A bot used for Twitch chat using different commands",
   "main": "index.js",
   "scripts": {
