@@ -1,6 +1,6 @@
 # Jon Bot
 
-Bot created to listen to and integrate with Twitch chat.\
+Bot created to listen to and integrate with Twitch chat.<br>
 Version: 1.5.1
 
 ## Description
@@ -16,35 +16,48 @@ An in-depth paragraph about your project and overview of use.
 
 ## Available commands
 
-* -dice                   - Picks a random number from 1-6
-* -randomboss             - Picks a random Genshin world boss from a list.
-* -spins @user            - Shows wheel spins a user has.
-* -add @user              - Adds 1 spin to the wheel spins of a user.
-* -add @user (amount)     - Adds amount of spins to the wheel spins of a user.
-* -rm @user               - Spends 1 spin of the wheel for a user.
-* -rm @user (amount)      - Spends an amount of spins of the wheel for a user.
-* -timer (name) (minutes) - Sets a named timer in minutes.
+* -dice<br>
+Picks a random number from 1-6
+* -randomboss<br>
+Picks a random Genshin world boss from a list.
+* -spins @user<br>
+Shows wheel spins a user has.
+* -add @user<br>
+Adds 1 spin to the wheel spins of a user.
+* -add @user (amount)<br>
+Adds amount of spins to the wheel spins of a user.
+* -rm @user<br>
+Spends 1 spin of the wheel for a user.
+* -rm @user (amount)<br>
+Spends an amount of spins of the wheel for a user.
+* -timer (name) (minutes)<br>
+Sets a named timer in minutes.
 
 ### `-randomboss`
-Example: `-randomboss`\
-Output: `1: Anemo Hypostasis`\
-Picks a random world boss in Genshin Impact and prints it out to the chat.\
-List of potential bosses is gotten from a local database.\
+Example: `-randomboss`<br>
+Output: `1: Anemo Hypostasis`<br> 
+Description:<br> 
+Picks a random world boss in Genshin Impact and prints it out to the chat.<br>
+List of potential bosses is gotten from a local database.<br>
 Jon maintains this database
 
 ### Wheel spin commands
 #### `-spins {@userName}`
-Example: `-spins @TwitchJonBot`\
-Output: `TwitchJonBot spins: [4]`\
+Example: `-spins @TwitchJonBot`<br>
+Output: `TwitchJonBot spins: [4]`<br> 
+Description:<br> 
 Shows the spins available for @user.
 | Parameter | Required? | Description |
 | --------- | --------- | ----------- |
 | @userName | Yes | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
 
 #### `-add {@userName} opt: {amountToAdd = 1}`
-Example: `-add @TwitchJobBot 5`\
-Output: `TwitchJonBot gains spins [+5]`\
-Adds an amount of spins to a @user.\
+Example: <br>
+`-add @TwitchJobBot 5`<br>
+Output: <br>
+`TwitchJonBot gains spins [+5]`<br> 
+Description:<br> 
+Adds an amount of spins to a @user.<br>
 If user does not exist in database, creates the user.
 | Parameter | Required? | Description |
 | --------- | --------- | ----------- |
@@ -52,9 +65,12 @@ If user does not exist in database, creates the user.
 | amountToAdd | No | Positive integer number of spins to add to @userName (ex. 4) |
 
 #### `-rm {@userName} opt: {amountToRemove = 1}`
-Example: `-rm @TwitchJonBot 6`\
-Output: `TwitchJonBot spends spins [-6]`\
-Spends an amount of spins of a @user.\
+Example: <br>
+`-rm @TwitchJonBot 6`<br>
+Output: <br>
+`TwitchJonBot spends spins [-6]`<br> 
+Description:<br> 
+Spends an amount of spins of a @user.<br>
 If user does not exist in database, creates user with 0 spins.
 | Parameter | Required? | Description |
 | --------- | --------- | ----------- |
@@ -62,8 +78,12 @@ If user does not exist in database, creates user with 0 spins.
 | amountToRemove | No | Positive integer number of spins to spend of @userName (ex. 3) |
 
 ### `-timer {nameOfTimer} {minutesToDelay}`
-Example: `-timer MyTimer 1`\
-Output: 1. `MyTimer 1 min` 2. `Timer MyTimer has ended`\
+Example: <br>
+`-timer MyTimer 1`<br>
+Output: <br>
+`MyTimer 1 min` <br>
+`Timer MyTimer has ended`<br> 
+Description:<br> 
 Sets a timer with a certain amount of time. When timer ends, bot chats the timer name ending.
 | Parameter | Required? | Description |
 | --------- | --------- | ----------- |
