@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.\
-Version: 1.5.0
+Version: 1.5.1
 
 ## Description
 
@@ -61,7 +61,7 @@ If user does not exist in database, creates user with 0 spins.
 
 ### `-timer {nameOfTimer} {minutesToDelay}`
 Example: `-timer MyTimer 1`\
-Output: `Timer MyTimer had ended`\
+Output: 1. `MyTimer 1 min` 2. `Timer MyTimer has ended`\
 Sets a timer with a certain amount of time. When timer ends, bot chats the timer name ending.
 | Parameter | Required? | Description |
 | --------- | --------- | ----------- |
@@ -128,6 +128,11 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
+* 1.5.1
+    * Fixed issue with regular chatters being able to call commands (#19)
+    * Added logging caller of command
+    * Added logging userState of caller
+    * Added chat to be sent when starting a timer
 * 1.5.0
     * Added config for remote chat commands (#6)
     * Add command -timer (#11)

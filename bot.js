@@ -55,18 +55,24 @@ client.connect();
 function onMessageHandler(target, userState, msg, self) {
   if (self) { return; } // Ignore messages from the bot
   if (msg[0] !== '-') { return }
-
-  const isBroadcaster = userState.badges !== null && userState.badges.broadcaster !== null;
-  const isModerator = userState.mod !== null && userState.mod;
-
+  console.log(new Date());
+  const callerUserName = userState.username;
+  
+  const isBroadcaster = userState.badges != null && userState.badges.broadcaster != null;
+  const isModerator = userState.mod != null && userState.mod;
+  console.log(`isBroadCaster ${isBroadcaster}`)
+  console.log(`isModerator ${isModerator}`)
+  console.dir(userState);
+  
   if (!isBroadcaster && !isModerator) { return; }
   const enableRemoteCommands = config.get('enableRemoteCommands');
   if (enableRemoteCommands && target === config.get('remoteFromChannel')) target = config.get('remoteToChannel');
-
+  
   // Remove whitespace from chat message
   const message = msg.trim();
   const splitMessage = message.split(" ");
   const commandName = splitMessage[0];
+  console.log(`${callerUserName} writes ${message}`);
 
   // If the command is known, let's execute it
   try {
@@ -89,6 +95,7 @@ function onMessageHandler(target, userState, msg, self) {
     } else if (commandName === '-timer'){
       const nameOfTimer = splitMessage[1];
       const minutesToWait = splitMessage[2];
+      client.say(target, `${nameOfTimer} ${minutesToWait} min`)
       setTimeout(signalTimerEnd, minutesToWait * 1000 * 60, target, nameOfTimer);
     }
     else {
