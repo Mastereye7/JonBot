@@ -83,8 +83,6 @@ Sets a timer with a certain amount of time. When timer ends, bot chats the timer
 - Make sure to create a /config folder with a default.json file to run the software.
 
 #### Config
-<details>
-<summary>Default config</summary>
 ```json
 {
     "twitchConfig":{
@@ -107,7 +105,6 @@ Sets a timer with a certain amount of time. When timer ends, bot chats the timer
     "remoteToChannel": "#{channel}"
 }
 ```
-</details>
 
 ### Executing program
 
