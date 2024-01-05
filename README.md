@@ -129,13 +129,13 @@ Contributors names and contact info
 
 ## Version History
 * 1.5.1
-    * Fixed issue with regular chatters being able to call commands (#19)
+    * Fixed issue with regular chatters being able to call commands [#19](https://github.com/Mastereye7/JonBot/issues/19)
     * Added logging caller of command
     * Added logging userState of caller
     * Added chat to be sent when starting a timer
 * 1.5.0
-    * Added config for remote chat commands (#6)
-    * Add command -timer (#11)
+    * Added config for remote chat commands [#6](https://github.com/Mastereye7/JonBot/issues/6)
+    * Add command -timer [#11](https://github.com/Mastereye7/JonBot/issues/11)
     * Change readme with outputs of commands
 * 1.4
     * Added ability to remotely send commands through another channel chat
