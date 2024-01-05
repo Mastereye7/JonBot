@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.\
-Version: 1.4
+Version: 1.5.0
 
 ## Description
 
@@ -112,6 +112,7 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
+* 1.5.0
 * 1.4
     * Added ability to remotely send commands through another channel chat
     * Added enableRemoteCommands config
