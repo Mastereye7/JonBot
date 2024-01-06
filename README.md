@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.<br>
-Version: 1.5.1
+Version: 1.6.0
 
 ## Description
 
@@ -9,15 +9,25 @@ The bot will connect to a Twitch chat set in the config and listen for commands 
 
 ## Features
 
-- Commands called in chat with '-'
-- Checks whether the caller is a broadcaster or a moderator
+- Commands called in chat with prefix set in config
+- Restrict commands to everyone or broadcaster/moderator only
 - MSSQL Database for writing and reading data
 - Remotely send commands through other channel chats
 
 ## Available commands
 
+### Common commands
+* **-commands**<br>
+Shows all the available commands for the user
 * **-dice**<br>
 Picks a random number from 1-6
+* **-spins**<br>
+Shows wheel spins the calling user has.
+
+
+### Restricted commands
+* **-commands**<br>
+Shows all the available restricted commands for the user
 * **-randomboss**<br>
 Picks a random Genshin world boss from a list.
 * **-spins @user**<br>
@@ -26,30 +36,44 @@ Shows wheel spins a user has.
 Adds 1 spin to the wheel spins of a user.
 * **-add @user (amount)**<br>
 Adds amount of spins to the wheel spins of a user.
-* **-rm @user**<br>
+* **-spend @user**<br>
 Spends 1 spin of the wheel for a user.
-* **-rm @user (amount)**<br>
+* **-spend @user (amount)**<br>
 Spends an amount of spins of the wheel for a user.
 * **-timer (name) (minutes)**<br>
 Sets a named timer in minutes.
 
+### `-commands`
+Example: <br>
+`-commands` <br>
+Output: <br>
+`commands,dice,randomboss,spins,add`<br>
+Description:<br>
+Shows the available commands for the user. <br>
+If the user has restricted access, shows more commands.
+
 ### `-randomboss`
-Example: `-randomboss`<br>
-Output: `1: Anemo Hypostasis`<br> 
+Example: <br>
+`-randomboss`<br>
+Output: <br>
+`1: Anemo Hypostasis`<br> 
 Description:<br> 
 Picks a random world boss in Genshin Impact and prints it out to the chat.<br>
 List of potential bosses is gotten from a local database.<br>
 Jon maintains this database
 
 ### Wheel spin commands
-#### `-spins {@userName}`
-Example: `-spins @TwitchJonBot`<br>
-Output: `TwitchJonBot spins: [4]`<br> 
+#### `-spins opt: {@userName}`
+Example: <br>
+`-spins`<br>
+`-spins @TwitchJonBot`<br>
+Output: <br>
+`TwitchJonBot spins: [4]`<br> 
 Description:<br> 
 Shows the spins available for @user.
 | Parameter | Required? | Description |
 | --------- | --------- | ----------- |
-| @userName | Yes | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
+| @userName | No | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
 
 #### `-add {@userName} opt: {amountToAdd = 1}`
 Example: <br>
@@ -64,9 +88,9 @@ If user does not exist in database, creates the user.
 | @userName | Yes | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
 | amountToAdd | No | Positive integer number of spins to add to @userName (ex. 4) |
 
-#### `-rm {@userName} opt: {amountToRemove = 1}`
+#### `-spend {@userName} opt: {amountToRemove = 1}`
 Example: <br>
-`-rm @TwitchJonBot 6`<br>
+`-spend @TwitchJonBot 6`<br>
 Output: <br>
 `TwitchJonBot spends spins [-6]`<br> 
 Description:<br> 
@@ -150,6 +174,11 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
+* 1.6.0
+    * Added -spins default command, shows spins of calling user [#20](https://github.com/Mastereye7/JonBot/issues/20)
+    * Added restricted access to commands, some are now open for everyone to use
+    * Change -rm command to -spend [#23](https://github.com/Mastereye7/JonBot/issues/23)
+    * Added -commands command, shows available commands of the user [#26](https://github.com/Mastereye7/JonBot/issues/26)
 * 1.5.1
     * Fixed issue with regular chatters being able to call commands [#19](https://github.com/Mastereye7/JonBot/issues/19)
     * Added logging caller of command

@@ -3,6 +3,24 @@ const config = require('config');
 const sql = require('mssql');
 console.log(`Jon Bot Version ${require("./package").version}`)
 
+const restrictedCommands =
+  [
+    'commands',
+    'dice',
+    'randomboss',
+    'spins',
+    'add',
+    'spend',
+    'timer'
+  ];
+const commonCommands =
+  [
+    'commands',
+    'dice',
+    'spins'
+  ]
+const commandPrefix = config.get('commandPrefix');
+
 // Define configuration options
 const opts = {
   identity: {
@@ -54,20 +72,20 @@ client.connect();
 // Called every time a message comes in
 function onMessageHandler(target, userState, msg, self) {
   if (self) { return; } // Ignore messages from the bot
-  if (msg[0] !== '-') { return }
+  if (msg[0] !== commandPrefix) { return }
   console.log(new Date());
-  const callerUserName = userState.username;
-  
+  const callerUserName = userState['display-name'];
+
   const isBroadcaster = userState.badges != null && userState.badges.broadcaster != null;
   const isModerator = userState.mod != null && userState.mod;
+  const restrictedAccess = isBroadcaster || isModerator;
   console.log(`isBroadCaster ${isBroadcaster}`)
   console.log(`isModerator ${isModerator}`)
   console.dir(userState);
-  
-  if (!isBroadcaster && !isModerator) { return; }
+
   const enableRemoteCommands = config.get('enableRemoteCommands');
   if (enableRemoteCommands && target === config.get('remoteFromChannel')) target = config.get('remoteToChannel');
-  
+
   // Remove whitespace from chat message
   const message = msg.trim();
   const splitMessage = message.split(" ");
@@ -75,36 +93,63 @@ function onMessageHandler(target, userState, msg, self) {
   console.log(`${callerUserName} writes ${message}`);
 
   // If the command is known, let's execute it
+  let unknownCommand = false;
   try {
-    if (commandName === '-dice') {
+    if (commandName === `${commandPrefix}commands`) {
+      if (restrictedAccess) {
+        client.say(target, restrictedCommands.toString());
+      } 
+      else {
+        client.say(target, commonCommands.toString());
+      }
+    } 
+    else if (commandName === `${commandPrefix}dice`) {
       const num = rollDice();
       client.say(target, `You rolled a ${num}`);
-    } else if (commandName === '-randomboss') {
+    } 
+    else if (commandName === `${commandPrefix}randomboss` && restrictedAccess) {
       randomWorldBoss(target);
-    } else if (commandName === '-add') {
+    } 
+    else if (commandName === `${commandPrefix}add` && restrictedAccess) {
       const userName = splitMessage[1].replace('@', '');
       const amountToAdd = splitMessage[2];
       addWheelSpin(target, userName, amountToAdd);
-    } else if (commandName === '-rm') {
+    } 
+    else if (commandName === `${commandPrefix}spend` && restrictedAccess) {
       const userName = splitMessage[1].replace('@', '');
       const amountToRemove = splitMessage[2];
       removeWheelSpin(target, userName, amountToRemove);
-    } else if (commandName === '-spins') {
-      const userName = splitMessage[1].replace('@', '');
+    } 
+    else if (commandName === `${commandPrefix}spins`) {
+      let userName;
+      if (restrictedAccess) {
+        if (splitMessage[1] != null) {
+          userName = splitMessage[1].replace('@', '');
+        } else {
+          userName = callerUserName;
+        }
+      } else {
+        userName = callerUserName;
+      }
       checkWheelSpins(target, userName)
-    } else if (commandName === '-timer'){
+    } 
+    else if (commandName === `${commandPrefix}timer` && restrictedAccess) {
       const nameOfTimer = splitMessage[1];
       const minutesToWait = splitMessage[2];
       client.say(target, `${nameOfTimer} ${minutesToWait} min`)
       setTimeout(signalTimerEnd, minutesToWait * 1000 * 60, target, nameOfTimer);
     }
     else {
-      console.log(`* Unknown command ${commandName}`);
+      unknownCommand = true;
+      console.log(`* Unknown command ${commandName} restrictedAccess [${restrictedAccess}]`);
     }
-    console.log(`* Executed ${commandName} command`);
+    if (!unknownCommand) {
+      console.log(`* Executed ${commandName} command`);
+    }
   }
   catch (error) {
     console.log(`Error with command ${commandName} ${error}`)
+    client.say(target, `${commandName} failed`)
   }
 }
 
@@ -187,7 +232,7 @@ function removeWheelSpin(target, userName, amountToRemove) {
   });
 }
 
-function checkWheelSpins(target, userName){
+function checkWheelSpins(target, userName) {
   sql.connect(sqlConfig).then(pool => {
     // Query
     return pool.request()
@@ -209,7 +254,7 @@ function checkWheelSpins(target, userName){
   });
 }
 
-function signalTimerEnd(target, name){
+function signalTimerEnd(target, name) {
   console.log(`Timer ${name} has ended`);
   client.say(target, `Timer ${name} has ended`);
 }
