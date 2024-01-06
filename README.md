@@ -9,7 +9,7 @@ The bot will connect to a Twitch chat set in the config and listen for commands 
 
 ## Features
 
-- Commands called in chat with '-'
+- Commands called in chat with prefix set in config
 - Restrict commands to everyone or broadcaster/moderator only
 - MSSQL Database for writing and reading data
 - Remotely send commands through other channel chats
