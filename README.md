@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.<br>
-Version: 1.6.0
+Version: 1.6.1-alpha
 
 ## Description
 
@@ -20,7 +20,7 @@ The bot will connect to a Twitch chat set in the config and listen for commands 
 * **-commands**<br>
 Shows all the available commands for the user
 * **-dice**<br>
-Picks a random number from 1-6
+Picks a random number from 1-100
 * **-spins**<br>
 Shows wheel spins the calling user has.
 
@@ -174,6 +174,8 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
+* 1.6.1
+    * Change dice roll to roll from 1-100
 * 1.6.0
     * Added -spins default command, shows spins of calling user [#20](https://github.com/Mastereye7/JonBot/issues/20)
     * Added restricted access to commands, some are now open for everyone to use
