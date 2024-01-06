@@ -10,7 +10,7 @@ The bot will connect to a Twitch chat set in the config and listen for commands 
 ## Features
 
 - Commands called in chat with '-'
-- Checks whether the caller is a broadcaster or a moderator
+- Restrict commands to everyone or broadcaster/moderator only
 - MSSQL Database for writing and reading data
 - Remotely send commands through other channel chats
 
@@ -32,9 +32,9 @@ Shows wheel spins a user has.
 Adds 1 spin to the wheel spins of a user.
 * **-add @user (amount)**<br>
 Adds amount of spins to the wheel spins of a user.
-* **-rm @user**<br>
+* **-spend @user**<br>
 Spends 1 spin of the wheel for a user.
-* **-rm @user (amount)**<br>
+* **-spend @user (amount)**<br>
 Spends an amount of spins of the wheel for a user.
 * **-timer (name) (minutes)**<br>
 Sets a named timer in minutes.
@@ -73,9 +73,9 @@ If user does not exist in database, creates the user.
 | @userName | Yes | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
 | amountToAdd | No | Positive integer number of spins to add to @userName (ex. 4) |
 
-#### `-rm {@userName} opt: {amountToRemove = 1}`
+#### `-spend {@userName} opt: {amountToRemove = 1}`
 Example: <br>
-`-rm @TwitchJonBot 6`<br>
+`-spend @TwitchJonBot 6`<br>
 Output: <br>
 `TwitchJonBot spends spins [-6]`<br> 
 Description:<br> 
@@ -162,6 +162,7 @@ Contributors names and contact info
 * 1.6.0
     * Added -spins default command, shows spins of calling user [#20](https://github.com/Mastereye7/JonBot/issues/20)
     * Added restricted access to commands, some are now open for everyone to use
+    * Change -rm command to -spend [#23](https://github.com/Mastereye7/JonBot/issues/23)
 * 1.5.1
     * Fixed issue with regular chatters being able to call commands [#19](https://github.com/Mastereye7/JonBot/issues/19)
     * Added logging caller of command

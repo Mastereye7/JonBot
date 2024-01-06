@@ -86,7 +86,7 @@ function onMessageHandler(target, userState, msg, self) {
         const userName = splitMessage[1].replace('@', '');
         const amountToAdd = splitMessage[2];
         addWheelSpin(target, userName, amountToAdd);
-    } else if (commandName === '-rm' && restrictedAccess) {
+    } else if (commandName === '-spend' && restrictedAccess) {
         const userName = splitMessage[1].replace('@', '');
         const amountToRemove = splitMessage[2];
         removeWheelSpin(target, userName, amountToRemove);
