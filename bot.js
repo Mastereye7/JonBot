@@ -56,18 +56,18 @@ function onMessageHandler(target, userState, msg, self) {
   if (self) { return; } // Ignore messages from the bot
   if (msg[0] !== '-') { return }
   console.log(new Date());
-  const callerUserName = userState.username;
-  
+  const callerUserName = userState['display-name'];
+
   const isBroadcaster = userState.badges != null && userState.badges.broadcaster != null;
   const isModerator = userState.mod != null && userState.mod;
+  const restrictedAccess = isBroadcaster || isModerator;
   console.log(`isBroadCaster ${isBroadcaster}`)
   console.log(`isModerator ${isModerator}`)
   console.dir(userState);
-  
-  if (!isBroadcaster && !isModerator) { return; }
+
   const enableRemoteCommands = config.get('enableRemoteCommands');
   if (enableRemoteCommands && target === config.get('remoteFromChannel')) target = config.get('remoteToChannel');
-  
+
   // Remove whitespace from chat message
   const message = msg.trim();
   const splitMessage = message.split(" ");
@@ -75,36 +75,50 @@ function onMessageHandler(target, userState, msg, self) {
   console.log(`${callerUserName} writes ${message}`);
 
   // If the command is known, let's execute it
+  let unknownCommand = false;
   try {
     if (commandName === '-dice') {
       const num = rollDice();
       client.say(target, `You rolled a ${num}`);
-    } else if (commandName === '-randomboss') {
-      randomWorldBoss(target);
-    } else if (commandName === '-add') {
-      const userName = splitMessage[1].replace('@', '');
-      const amountToAdd = splitMessage[2];
-      addWheelSpin(target, userName, amountToAdd);
-    } else if (commandName === '-rm') {
-      const userName = splitMessage[1].replace('@', '');
-      const amountToRemove = splitMessage[2];
-      removeWheelSpin(target, userName, amountToRemove);
+    } else if (commandName === '-randomboss' && restrictedAccess) {
+        randomWorldBoss(target);
+    } else if (commandName === '-add' && restrictedAccess) {
+        const userName = splitMessage[1].replace('@', '');
+        const amountToAdd = splitMessage[2];
+        addWheelSpin(target, userName, amountToAdd);
+    } else if (commandName === '-rm' && restrictedAccess) {
+        const userName = splitMessage[1].replace('@', '');
+        const amountToRemove = splitMessage[2];
+        removeWheelSpin(target, userName, amountToRemove);
     } else if (commandName === '-spins') {
-      const userName = splitMessage[1].replace('@', '');
+      let userName;
+      if (restrictedAccess) {
+        if (splitMessage[1] != null) {
+          userName = splitMessage[1].replace('@', '');
+        } else {
+          userName = callerUserName;
+        }
+      } else {
+        userName = callerUserName;
+      }
       checkWheelSpins(target, userName)
-    } else if (commandName === '-timer'){
-      const nameOfTimer = splitMessage[1];
-      const minutesToWait = splitMessage[2];
-      client.say(target, `${nameOfTimer} ${minutesToWait} min`)
-      setTimeout(signalTimerEnd, minutesToWait * 1000 * 60, target, nameOfTimer);
+    } else if (commandName === '-timer' && restrictedAccess) {
+        const nameOfTimer = splitMessage[1];
+        const minutesToWait = splitMessage[2];
+        client.say(target, `${nameOfTimer} ${minutesToWait} min`)
+        setTimeout(signalTimerEnd, minutesToWait * 1000 * 60, target, nameOfTimer);
     }
     else {
-      console.log(`* Unknown command ${commandName}`);
+      unknownCommand = true;
+      console.log(`* Unknown command ${commandName} restrictedAccess [${restrictedAccess}]`);
     }
-    console.log(`* Executed ${commandName} command`);
+    if (!unknownCommand) {
+      console.log(`* Executed ${commandName} command`);
+    }
   }
   catch (error) {
     console.log(`Error with command ${commandName} ${error}`)
+    client.say(target, `${commandName} failed`)
   }
 }
 
@@ -187,7 +201,7 @@ function removeWheelSpin(target, userName, amountToRemove) {
   });
 }
 
-function checkWheelSpins(target, userName){
+function checkWheelSpins(target, userName) {
   sql.connect(sqlConfig).then(pool => {
     // Query
     return pool.request()
@@ -209,7 +223,7 @@ function checkWheelSpins(target, userName){
   });
 }
 
-function signalTimerEnd(target, name){
+function signalTimerEnd(target, name) {
   console.log(`Timer ${name} has ended`);
   client.say(target, `Timer ${name} has ended`);
 }
