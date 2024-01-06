@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.<br>
-Version: 1.5.1
+Version: 1.6.0
 
 ## Description
 
@@ -16,8 +16,14 @@ The bot will connect to a Twitch chat set in the config and listen for commands 
 
 ## Available commands
 
+### Common commands
 * **-dice**<br>
 Picks a random number from 1-6
+* **-spins**<br>
+Shows wheel spins the calling user has.
+
+
+### Restricted commands
 * **-randomboss**<br>
 Picks a random Genshin world boss from a list.
 * **-spins @user**<br>
@@ -42,14 +48,17 @@ List of potential bosses is gotten from a local database.<br>
 Jon maintains this database
 
 ### Wheel spin commands
-#### `-spins {@userName}`
-Example: `-spins @TwitchJonBot`<br>
-Output: `TwitchJonBot spins: [4]`<br> 
+#### `-spins opt: {@userName}`
+Example: <br>
+`-spins`<br>
+`-spins @TwitchJonBot`<br>
+Output: <br>
+`TwitchJonBot spins: [4]`<br> 
 Description:<br> 
 Shows the spins available for @user.
 | Parameter | Required? | Description |
 | --------- | --------- | ----------- |
-| @userName | Yes | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
+| @userName | No | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
 
 #### `-add {@userName} opt: {amountToAdd = 1}`
 Example: <br>
@@ -150,6 +159,9 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
+* 1.6.0
+    * Added -spins default command, shows spins of calling user [#20](https://github.com/Mastereye7/JonBot/issues/20)
+    * Added restricted access to commands, some are now open for everyone to use
 * 1.5.1
     * Fixed issue with regular chatters being able to call commands [#19](https://github.com/Mastereye7/JonBot/issues/19)
     * Added logging caller of command
