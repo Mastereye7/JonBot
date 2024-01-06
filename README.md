@@ -17,6 +17,8 @@ The bot will connect to a Twitch chat set in the config and listen for commands 
 ## Available commands
 
 ### Common commands
+* **-commands**<br>
+Shows all the available commands for the user
 * **-dice**<br>
 Picks a random number from 1-6
 * **-spins**<br>
@@ -24,6 +26,8 @@ Shows wheel spins the calling user has.
 
 
 ### Restricted commands
+* **-commands**<br>
+Shows all the available restricted commands for the user
 * **-randomboss**<br>
 Picks a random Genshin world boss from a list.
 * **-spins @user**<br>
@@ -39,9 +43,20 @@ Spends an amount of spins of the wheel for a user.
 * **-timer (name) (minutes)**<br>
 Sets a named timer in minutes.
 
+### `-commands`
+Example: <br>
+`-commands` <br>
+Output: <br>
+`commands,dice,randomboss,spins,add`<br>
+Description:<br>
+Shows the available commands for the user. <br>
+If the user has restricted access, shows more commands.
+
 ### `-randomboss`
-Example: `-randomboss`<br>
-Output: `1: Anemo Hypostasis`<br> 
+Example: <br>
+`-randomboss`<br>
+Output: <br>
+`1: Anemo Hypostasis`<br> 
 Description:<br> 
 Picks a random world boss in Genshin Impact and prints it out to the chat.<br>
 List of potential bosses is gotten from a local database.<br>
@@ -163,6 +178,7 @@ Contributors names and contact info
     * Added -spins default command, shows spins of calling user [#20](https://github.com/Mastereye7/JonBot/issues/20)
     * Added restricted access to commands, some are now open for everyone to use
     * Change -rm command to -spend [#23](https://github.com/Mastereye7/JonBot/issues/23)
+    * Added -commands command, shows available commands of the user [#26](https://github.com/Mastereye7/JonBot/issues/26)
 * 1.5.1
     * Fixed issue with regular chatters being able to call commands [#19](https://github.com/Mastereye7/JonBot/issues/19)
     * Added logging caller of command

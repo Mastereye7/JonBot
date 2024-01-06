@@ -3,6 +3,24 @@ const config = require('config');
 const sql = require('mssql');
 console.log(`Jon Bot Version ${require("./package").version}`)
 
+const restrictedCommands =
+  [
+    'commands',
+    'dice',
+    'randomboss',
+    'spins',
+    'add',
+    'spend',
+    'timer'
+  ];
+const commonCommands =
+  [
+    'commands',
+    'dice',
+    'spins'
+  ]
+const commandPrefix = config.get('commandPrefix');
+
 // Define configuration options
 const opts = {
   identity: {
@@ -54,7 +72,7 @@ client.connect();
 // Called every time a message comes in
 function onMessageHandler(target, userState, msg, self) {
   if (self) { return; } // Ignore messages from the bot
-  if (msg[0] !== '-') { return }
+  if (msg[0] !== commandPrefix) { return }
   console.log(new Date());
   const callerUserName = userState['display-name'];
 
@@ -77,20 +95,32 @@ function onMessageHandler(target, userState, msg, self) {
   // If the command is known, let's execute it
   let unknownCommand = false;
   try {
-    if (commandName === '-dice') {
+    if (commandName === `${commandPrefix}commands`) {
+      if (restrictedAccess) {
+        client.say(target, restrictedCommands.toString());
+      } 
+      else {
+        client.say(target, commonCommands.toString());
+      }
+    } 
+    else if (commandName === `${commandPrefix}dice`) {
       const num = rollDice();
       client.say(target, `You rolled a ${num}`);
-    } else if (commandName === '-randomboss' && restrictedAccess) {
-        randomWorldBoss(target);
-    } else if (commandName === '-add' && restrictedAccess) {
-        const userName = splitMessage[1].replace('@', '');
-        const amountToAdd = splitMessage[2];
-        addWheelSpin(target, userName, amountToAdd);
-    } else if (commandName === '-spend' && restrictedAccess) {
-        const userName = splitMessage[1].replace('@', '');
-        const amountToRemove = splitMessage[2];
-        removeWheelSpin(target, userName, amountToRemove);
-    } else if (commandName === '-spins') {
+    } 
+    else if (commandName === `${commandPrefix}randomboss` && restrictedAccess) {
+      randomWorldBoss(target);
+    } 
+    else if (commandName === `${commandPrefix}add` && restrictedAccess) {
+      const userName = splitMessage[1].replace('@', '');
+      const amountToAdd = splitMessage[2];
+      addWheelSpin(target, userName, amountToAdd);
+    } 
+    else if (commandName === `${commandPrefix}spend` && restrictedAccess) {
+      const userName = splitMessage[1].replace('@', '');
+      const amountToRemove = splitMessage[2];
+      removeWheelSpin(target, userName, amountToRemove);
+    } 
+    else if (commandName === `${commandPrefix}spins`) {
       let userName;
       if (restrictedAccess) {
         if (splitMessage[1] != null) {
@@ -102,11 +132,12 @@ function onMessageHandler(target, userState, msg, self) {
         userName = callerUserName;
       }
       checkWheelSpins(target, userName)
-    } else if (commandName === '-timer' && restrictedAccess) {
-        const nameOfTimer = splitMessage[1];
-        const minutesToWait = splitMessage[2];
-        client.say(target, `${nameOfTimer} ${minutesToWait} min`)
-        setTimeout(signalTimerEnd, minutesToWait * 1000 * 60, target, nameOfTimer);
+    } 
+    else if (commandName === `${commandPrefix}timer` && restrictedAccess) {
+      const nameOfTimer = splitMessage[1];
+      const minutesToWait = splitMessage[2];
+      client.say(target, `${nameOfTimer} ${minutesToWait} min`)
+      setTimeout(signalTimerEnd, minutesToWait * 1000 * 60, target, nameOfTimer);
     }
     else {
       unknownCommand = true;
