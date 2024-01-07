@@ -2,6 +2,7 @@ const tmi = require('tmi.js');
 const config = require('config');
 const sql = require('mssql');
 console.log(`Jon Bot Version ${require("./package").version}`)
+console.log(`NODE_ENV: ${process.env['NODE_ENV']}`)
 
 const restrictedCommands =
   [
@@ -29,6 +30,8 @@ const opts = {
   },
   channels: config.get('twitchConfig.channels')
 };
+
+console.dir(opts.channels);
 
 const sqlConfig = {
   user: config.get('dbConfig.user'),
@@ -65,12 +68,43 @@ const client = new tmi.client(opts);
 // Register our event handlers (defined below)
 client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
+client.on("subscription", onSubscriptionHandler);
+client.on('subgift', onGiftSubHandler);
 
 // Connect to Twitch:
 client.connect();
 
+process.on('SIGINT', handleSignalReceived);
+process.on('SIGTERM', handleSignalReceived);
+
+/**
+ * 
+ * @param {NodeJS.Signals} signal 
+ */
+function handleSignalReceived(signal) {
+  console.info(`${signal} signal received`);
+  if (config.get('enableLoggingStartAndShutdown')){
+    try {
+      for (let i = 0; i < opts.channels.length; i++) {
+        client.say(opts.channels[i], 'Shutting down');
+      }
+    } catch (error) {
+      console.log(`Unable to send shutdown message ${error}`);
+    }
+  }
+  process.exit();
+}
+
 // Called every time a message comes in
-function onMessageHandler(target, userState, msg, self) {
+/**
+ * Received a message. This event is fired whenever you receive a chat, action or whisper message
+ * @param {string} channel 
+ * @param {tmi.ChatUserstate} userState 
+ * @param {string} msg 
+ * @param {boolean} self 
+ * @returns 
+ */
+function onMessageHandler(channel, userState, msg, self) {
   if (self) { return; } // Ignore messages from the bot
   if (msg[0] !== commandPrefix) { return }
   console.log(new Date());
@@ -84,7 +118,7 @@ function onMessageHandler(target, userState, msg, self) {
   console.dir(userState);
 
   const enableRemoteCommands = config.get('enableRemoteCommands');
-  if (enableRemoteCommands && target === config.get('remoteFromChannel')) target = config.get('remoteToChannel');
+  if (enableRemoteCommands && channel === config.get('remoteFromChannel')) channel = config.get('remoteToChannel');
 
   // Remove whitespace from chat message
   const message = msg.trim();
@@ -97,30 +131,30 @@ function onMessageHandler(target, userState, msg, self) {
   try {
     if (commandName === `${commandPrefix}commands`) {
       if (restrictedAccess) {
-        client.say(target, restrictedCommands.toString());
+        client.say(channel, restrictedCommands.toString());
       } 
       else {
-        client.say(target, commonCommands.toString());
+        client.say(channel, commonCommands.toString());
       }
     } 
     else if (commandName === `${commandPrefix}dice`) {
       const num = rollDice();
-      client.say(target, `You rolled a ${num}`);
+      client.say(channel, `You rolled a ${num}`);
     } 
     else if (commandName === `${commandPrefix}randomboss` && restrictedAccess) {
-      randomWorldBoss(target);
+      randomWorldBoss(channel);
     } 
     else if (commandName === `${commandPrefix}add` && restrictedAccess) {
       const userName = splitMessage[1].replace('@', '');
       const amountToAdd = splitMessage[2];
-      addWheelSpin(target, userName, amountToAdd);
+      addWheelSpin(channel, userName, amountToAdd);
     } 
     else if (commandName === `${commandPrefix}spend` && restrictedAccess) {
       const userName = splitMessage[1].replace('@', '');
       const amountToRemove = splitMessage[2];
-      removeWheelSpin(target, userName, amountToRemove);
+      removeWheelSpin(channel, userName, amountToRemove);
     } 
-    else if (commandName === `${commandPrefix}spins`) {
+    else if (commandName === `${commandPrefix}spins` || commandName === `${commandPrefix}spings`) {
       let userName;
       if (restrictedAccess) {
         if (splitMessage[1] != null) {
@@ -131,13 +165,13 @@ function onMessageHandler(target, userState, msg, self) {
       } else {
         userName = callerUserName;
       }
-      checkWheelSpins(target, userName)
+      checkWheelSpins(channel, userName)
     } 
     else if (commandName === `${commandPrefix}timer` && restrictedAccess) {
       const nameOfTimer = splitMessage[1];
       const minutesToWait = splitMessage[2];
-      client.say(target, `${nameOfTimer} ${minutesToWait} min`)
-      setTimeout(signalTimerEnd, minutesToWait * 1000 * 60, target, nameOfTimer);
+      client.say(channel, `${nameOfTimer} ${minutesToWait} min`)
+      setTimeout(signalTimerEnd, minutesToWait * 1000 * 60, channel, nameOfTimer);
     }
     else {
       unknownCommand = true;
@@ -149,18 +183,22 @@ function onMessageHandler(target, userState, msg, self) {
   }
   catch (error) {
     console.log(`Error with command ${commandName} ${error}`)
-    client.say(target, `${commandName} failed`)
+    client.say(channel, `${commandName} failed`)
   }
 }
 
 // Function called when the "dice" command is issued
 function rollDice() {
-  const sides = 6;
+  const sides = 100;
   return Math.floor(Math.random() * sides) + 1;
 }
 
 // Function that returns a random world boss
-function randomWorldBoss(target) {
+/**
+ * 
+ * @param {string} channel 
+ */
+function randomWorldBoss(channel) {
   sql.connect(sqlConfig).then(pool => {
     // Query
 
@@ -171,15 +209,21 @@ function randomWorldBoss(target) {
     const recordSet = result.recordset;
     const randomNumber = Math.floor(Math.random() * recordSet.length);
     const chosenBoss = recordSet[randomNumber];
-    client.say(target, `${chosenBoss.Id}: ${chosenBoss.BossName}`)
+    client.say(channel, `${chosenBoss.Id}: ${chosenBoss.BossName}`)
   }).catch(err => {
     console.log(err);
-    client.say(target, '¯\\_(ツ)_/¯');
+    client.say(channel, '¯\\_(ツ)_/¯');
     // ... error checks
   });
 }
 
-function addWheelSpin(target, userName, amountToAdd) {
+/**
+ * 
+ * @param {string} channel 
+ * @param {string} userName 
+ * @param {string} amountToAdd 
+ */
+function addWheelSpin(channel, userName, amountToAdd) {
   if (amountToAdd == null) amountToAdd = 1;
   const valueToAdd = amountToAdd;
   sql.connect(sqlConfig).then(pool => {
@@ -198,14 +242,20 @@ function addWheelSpin(target, userName, amountToAdd) {
         `);
   }).then(result => {
     console.dir(result);
-    client.say(target, `${userName} gained spins [+${valueToAdd}]`);
+    client.say(channel, `${userName} gained spins [+${valueToAdd}]`);
   }).catch(err => {
     console.log(err);
-    client.say(target, '¯\\_(ツ)_/¯');
+    client.say(channel, '¯\\_(ツ)_/¯');
     // ... error checks
   });
 }
 
+/**
+ * 
+ * @param {string} target 
+ * @param {string} userName 
+ * @param {string} amountToRemove 
+ */
 function removeWheelSpin(target, userName, amountToRemove) {
   if (amountToRemove == null) amountToRemove = 1;
   const valueToRemove = amountToRemove;
@@ -232,6 +282,11 @@ function removeWheelSpin(target, userName, amountToRemove) {
   });
 }
 
+/**
+ * 
+ * @param {string} target 
+ * @param {string} userName 
+ */
 function checkWheelSpins(target, userName) {
   sql.connect(sqlConfig).then(pool => {
     // Query
@@ -254,12 +309,54 @@ function checkWheelSpins(target, userName) {
   });
 }
 
-function signalTimerEnd(target, name) {
+function signalTimerEnd(channel, name) {
   console.log(`Timer ${name} has ended`);
-  client.say(target, `Timer ${name} has ended`);
+  client.say(channel, `Timer ${name} has ended`);
 }
 
 // Called every time the bot connects to Twitch chat
+/**
+ * 
+ * @param {string} addr 
+ * @param {number} port 
+ */
 function onConnectedHandler(addr, port) {
   console.log(`* Connected to ${addr}:${port}`);
+  if (config.get('enableLoggingStartAndShutdown')) {
+    for (let i = 0; i < opts.channels.length; i++) {
+      client.say(opts.channels[i], 'Running');
+    }
+  }
+}
+
+/**
+ * Username has subscribed to a channel
+ * @param {string} channel Channel name
+ * @param {string} username Username
+ * @param {tmi.SubMethods} methods Methods and plan used to subscribe
+ * @param {string} message Custom message
+ * @param {tmi.SubUserstate} userstate Userstate object
+ */
+function onSubscriptionHandler(channel, username, methods, message, userstate) {
+  const displayName = userstate.displayName;
+  console.log(`Sub received ${displayName}`);
+
+  addWheelSpin(channel, displayName, 1);
+  console.log(`* Finished executing subscription handler ${displayName}`);
+}
+
+/**
+ * Username gifted a subscription to recipient in a channel.
+ * @param {string} channel Channel name
+ * @param {string} username Sender username
+ * @param {number} streakMonths Streak months
+ * @param {string} recipient Recipient username
+ * @param {tmi.SubMethods} methods Methods and plan used to subscribe
+ * @param {tmi.SubGiftUserstate} userstate Userstate object
+ */
+function onGiftSubHandler(channel, username, streakMonths, recipient, methods, userstate){
+  const displayName = userstate.displayName;
+  console.log(`Gift sub received ${displayName} to ${recipient}`);
+  addWheelSpin(channel, displayName, 1);
+  console.log(`* Finished executing subscription handler ${displayName} to ${recipient}`);
 }

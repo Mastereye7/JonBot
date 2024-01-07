@@ -1,0 +1,1 @@
+chat:edit chat:read
