@@ -131,3 +131,6 @@ dist
 
 # configurations
 config/
+
+# test data
+test-data/

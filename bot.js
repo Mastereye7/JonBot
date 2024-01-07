@@ -2,6 +2,7 @@ const tmi = require('tmi.js');
 const config = require('config');
 const sql = require('mssql');
 console.log(`Jon Bot Version ${require("./package").version}`)
+console.log(`NODE_ENV: ${process.env['NODE_ENV']}`)
 
 const restrictedCommands =
   [
@@ -29,6 +30,8 @@ const opts = {
   },
   channels: config.get('twitchConfig.channels')
 };
+
+console.dir(opts.channels);
 
 const sqlConfig = {
   user: config.get('dbConfig.user'),
@@ -66,6 +69,7 @@ const client = new tmi.client(opts);
 client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
 client.on("subscription", onSubscriptionHandler);
+client.on('subgift', onGiftSubHandler);
 
 // Connect to Twitch:
 client.connect();
@@ -93,7 +97,7 @@ function handleSignalReceived(signal) {
 
 // Called every time a message comes in
 /**
- * 
+ * Received a message. This event is fired whenever you receive a chat, action or whisper message
  * @param {string} channel 
  * @param {tmi.ChatUserstate} userState 
  * @param {string} msg 
@@ -326,17 +330,33 @@ function onConnectedHandler(addr, port) {
 }
 
 /**
- * 
- * @param {string} channel 
- * @param {string} username 
- * @param {tmi.SubMethods} methods 
- * @param {string} message 
- * @param {tmi.SubUserstate} userstate 
+ * Username has subscribed to a channel
+ * @param {string} channel Channel name
+ * @param {string} username Username
+ * @param {tmi.SubMethods} methods Methods and plan used to subscribe
+ * @param {string} message Custom message
+ * @param {tmi.SubUserstate} userstate Userstate object
  */
 function onSubscriptionHandler(channel, username, methods, message, userstate) {
-  const displayName = userState.displayName;
+  const displayName = userstate.displayName;
   console.log(`Sub received ${displayName}`);
 
   addWheelSpin(channel, displayName, 1);
   console.log(`* Finished executing subscription handler ${displayName}`);
+}
+
+/**
+ * Username gifted a subscription to recipient in a channel.
+ * @param {string} channel Channel name
+ * @param {string} username Sender username
+ * @param {number} streakMonths Streak months
+ * @param {string} recipient Recipient username
+ * @param {tmi.SubMethods} methods Methods and plan used to subscribe
+ * @param {tmi.SubGiftUserstate} userstate Userstate object
+ */
+function onGiftSubHandler(channel, username, streakMonths, recipient, methods, userstate){
+  const displayName = userstate.displayName;
+  console.log(`Gift sub received ${displayName} to ${recipient}`);
+  addWheelSpin(channel, displayName, 1);
+  console.log(`* Finished executing subscription handler ${displayName} to ${recipient}`);
 }
