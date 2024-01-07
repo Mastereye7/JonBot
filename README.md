@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.<br>
-Version: 1.6.0
+Version: 1.7.0
 
 ## Description
 
@@ -20,7 +20,7 @@ The bot will connect to a Twitch chat set in the config and listen for commands 
 * **-commands**<br>
 Shows all the available commands for the user
 * **-dice**<br>
-Picks a random number from 1-6
+Picks a random number from 1-100
 * **-spins**<br>
 Shows wheel spins the calling user has.
 
@@ -148,7 +148,8 @@ Sets a timer with a certain amount of time. When timer ends, bot chats the timer
     },
     "enableRemoteCommands": false,
     "remoteFromChannel": "#{channel}",
-    "remoteToChannel": "#{channel}"
+    "remoteToChannel": "#{channel}",
+    "enableLoggingStartAndShutdown": false
 }
 ```
 
@@ -174,6 +175,13 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
+* 1.7.0
+    * Change dice roll to roll from 1-100
+    * Added subscirption and giftsub handler adding spins to the user [#18](https://github.com/Mastereye7/JonBot/issues/18)
+    * Bot says to all channels when it starts and gets shut down (Dies quietly if it crashes for now...)
+    * Added documentation to methods and type hints
+    * Renamed "target" to "channel" for more clarity
+    * Added twitch token PowerShell script
 * 1.6.0
     * Added -spins default command, shows spins of calling user [#20](https://github.com/Mastereye7/JonBot/issues/20)
     * Added restricted access to commands, some are now open for everyone to use
