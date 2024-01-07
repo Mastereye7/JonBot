@@ -24,7 +24,6 @@ Picks a random number from 1-100
 * **-spins**<br>
 Shows wheel spins the calling user has.
 
-
 ### Restricted commands
 * **-commands**<br>
 Shows all the available restricted commands for the user
