@@ -70,6 +70,7 @@ client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
 client.on("subscription", onSubscriptionHandler);
 client.on('subgift', onGiftSubHandler);
+//client.on(`redeem`, onRedeemHandler);
 
 // Connect to Twitch:
 client.connect();
@@ -324,7 +325,7 @@ function onConnectedHandler(addr, port) {
   console.log(`* Connected to ${addr}:${port}`);
   if (config.get('enableLoggingStartAndShutdown')) {
     for (let i = 0; i < opts.channels.length; i++) {
-      client.say(opts.channels[i], 'Running');
+      client.say(opts.channels[i], `Running  ${require("./package").version}`);
     }
   }
 }
@@ -338,7 +339,7 @@ function onConnectedHandler(addr, port) {
  * @param {tmi.SubUserstate} userstate Userstate object
  */
 function onSubscriptionHandler(channel, username, methods, message, userstate) {
-  const displayName = userstate.displayName;
+  const displayName = userstate['display-name'];
   console.log(`Sub received ${displayName}`);
 
   addWheelSpin(channel, displayName, 1);
@@ -355,8 +356,22 @@ function onSubscriptionHandler(channel, username, methods, message, userstate) {
  * @param {tmi.SubGiftUserstate} userstate Userstate object
  */
 function onGiftSubHandler(channel, username, streakMonths, recipient, methods, userstate){
-  const displayName = userstate.displayName;
+  const displayName = userstate['display-name'];
   console.log(`Gift sub received ${displayName} to ${recipient}`);
   addWheelSpin(channel, displayName, 1);
   console.log(`* Finished executing subscription handler ${displayName} to ${recipient}`);
+}
+
+/**
+ * This event will only be received for rewards and custom rewards with user text
+ * Not in use due to this restriction ;_;
+ * @param {string} channel 
+ * @param {string} username 
+ * @param {string} rewardType 
+ * @param {tmi.ChatUserstate} tags 
+ */
+function onRedeemHandler(channel, username, rewardType, tags){
+  const displayName = tags['display-name'];
+  console.log(`Redeem received ${displayName} ${rewardType}`);
+  client.say(channel, `${rewardType}`);
 }
