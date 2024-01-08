@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.<br>
-Version: 1.8.0-alpha
+Version: 1.8.0
 
 ## Description
 
