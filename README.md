@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.<br>
-Version: 1.7.1
+Version: 1.8.0
 
 ## Description
 
@@ -10,6 +10,7 @@ The bot will connect to a Twitch chat set in the config and listen for commands 
 ## Features
 
 - Commands called in chat with prefix set in config
+- Automatically listens to certain chat events
 - Restrict commands to everyone or broadcaster/moderator only
 - MSSQL Database for writing and reading data
 - Remotely send commands through other channel chats
@@ -148,7 +149,8 @@ Sets a timer with a certain amount of time. When timer ends, bot chats the timer
     "enableRemoteCommands": false,
     "remoteFromChannel": "#{channel}",
     "remoteToChannel": "#{channel}",
-    "enableLoggingStartAndShutdown": false
+    "enableLoggingStartAndShutdown": false,
+    "bitsPerSpin": 200
 }
 ```
 
@@ -174,6 +176,9 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
+* 1.8.0
+    * Added automatic spins on resub [#37](https://github.com/Mastereye7/JonBot/issues/37)
+    * Added automatic spins on bits cheers [#34](https://github.com/Mastereye7/JonBot/issues/34)
 * 1.7.1
     * Fix subscription not giving automatic spins
 * 1.7.0
