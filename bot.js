@@ -71,6 +71,7 @@ client.on('connected', onConnectedHandler);
 client.on("subscription", onSubscriptionHandler);
 client.on('subgift', onGiftSubHandler);
 client.on('resub', onResubHandler);
+client.on('cheer', onCheerHandler);
 //client.on(`redeem`, onRedeemHandler);
 
 // Connect to Twitch:
@@ -392,4 +393,26 @@ function onResubHandler(channel, username, months, message, userstate, methods){
   console.log(`Resub received ${displayName}`);
   addWheelSpin(channel, displayName, 1);
   console.log(`* Finished executing resub handler ${displayName}`);
+}
+
+/**
+ * Username has cheered to a channel.
+ * Note: The amount of bits the user sent is inside the userstate (userstate.bits) - Read the Twitch API documentation for more information.
+ * @param {string} channel Channel name
+ * @param {tmi.ChatUserstate} userstate Userstate object
+ * @param {string} message Message
+ */
+function onCheerHandler(channel, userstate, message) {
+  const displayName = userstate['display-name'];
+  const bits = userstate.bits;
+  console.log(`Cheer received ${displayName} ${bits} bits`);
+  const bitsPerSpin = config.get('bitsPerSpin');
+  const amountOfSpins = bits / bitsPerSpin;
+  console.log(`amountOfSpins: ${amountOfSpins}`);
+  const amountOfSpinsWholeNumber = Math.floor(amountOfSpins);
+  console.log(`amountOfSpinsWholeNumber: ${amountOfSpinsWholeNumber}`);
+  if (amountOfSpinsWholeNumber >= 1) {
+    addWheelSpin(channel, displayName, amountOfSpinsWholeNumber);
+  }
+  console.log(`* Finished executing cheer handler ${displayName} ${bits} bits`);
 }
