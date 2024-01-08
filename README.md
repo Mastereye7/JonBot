@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.<br>
-Version: 1.7.1
+Version: 1.8.0-alpha
 
 ## Description
 
@@ -174,6 +174,8 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
+* 1.8.0
+    * Added automatic spins on resub [#37](https://github.com/Mastereye7/JonBot/issues/37)
 * 1.7.1
     * Fix subscription not giving automatic spins
 * 1.7.0

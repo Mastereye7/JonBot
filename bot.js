@@ -70,6 +70,7 @@ client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
 client.on("subscription", onSubscriptionHandler);
 client.on('subgift', onGiftSubHandler);
+client.on('resub', onResubHandler);
 //client.on(`redeem`, onRedeemHandler);
 
 // Connect to Twitch:
@@ -341,7 +342,6 @@ function onConnectedHandler(addr, port) {
 function onSubscriptionHandler(channel, username, methods, message, userstate) {
   const displayName = userstate['display-name'];
   console.log(`Sub received ${displayName}`);
-
   addWheelSpin(channel, displayName, 1);
   console.log(`* Finished executing subscription handler ${displayName}`);
 }
@@ -374,4 +374,22 @@ function onRedeemHandler(channel, username, rewardType, tags){
   const displayName = tags['display-name'];
   console.log(`Redeem received ${displayName} ${rewardType}`);
   client.say(channel, `${rewardType}`);
+}
+
+/**
+ * Username has resubbed on a channel
+ * streakMonths will be 0 unless the user shares their streak. userstate will have a lot of other data pertaining to the message
+ * @param {string} channel Channel name
+ * @param {string} username Username
+ * @param {number} months Streak months
+ * @param {string} message Custom message
+ * @param {tmi.SubUserstate} userstate Userstate object userstate["msg-param-cumulative-months"]: String - Cumulative months
+userstate["msg-param-should-share-streak"]: Boolean - User decided to share their sub streak
+ * @param {tmi.SubMethods} methods Resub methods and plan (such as Prime)
+ */
+function onResubHandler(channel, username, months, message, userstate, methods){
+  const displayName = userstate['display-name'];
+  console.log(`Resub received ${displayName}`);
+  addWheelSpin(channel, displayName, 1);
+  console.log(`* Finished executing resub handler ${displayName}`);
 }
