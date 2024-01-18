@@ -7,6 +7,7 @@ console.log(`NODE_ENV: ${process.env['NODE_ENV']}`)
 const restrictedCommands =
   [
     'commands',
+    'marco',
     'dice',
     'randomboss',
     'spins',
@@ -17,6 +18,7 @@ const restrictedCommands =
 const commonCommands =
   [
     'commands',
+    'marco',
     'dice',
     'spins'
   ]
@@ -140,6 +142,9 @@ function onMessageHandler(channel, userState, msg, self) {
         client.say(channel, commonCommands.toString());
       }
     } 
+    else if (commandName === `${commandPrefix}marco`){
+      client.say(channel, `polo`);
+    }
     else if (commandName === `${commandPrefix}dice`) {
       const num = rollDice();
       client.say(channel, `You rolled a ${num}`);
