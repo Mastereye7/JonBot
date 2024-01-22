@@ -1,6 +1,6 @@
 {
   "name": "jonbot",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "A bot used for Twitch chat using different commands",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "Mastereye7",
   "license": "ISC",
   "dependencies": {
-    "config": "^3.3.9",
+    "config": "^3.3.10",
     "mssql": "^10.0.1",
     "tmi.js": "^1.8.5"
   }
