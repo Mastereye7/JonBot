@@ -29,7 +29,7 @@ Shows wheel spins the calling user has.
 * **-goal**<br>
 Shows the current goal amount in dollars
 
-### Restricted commands
+### Restricted commands (Only moderators and broadcasters can use)
 * **-commands**<br>
 Shows all the available restricted commands for the user
 * **-marco**<br>
