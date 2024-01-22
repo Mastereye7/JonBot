@@ -230,7 +230,11 @@ Contributors names and contact info
 
 ## Version History
 * 1.9.0
-    * 
+    * Added powershell scripts for starting the bot
+    * Added -marco command to ping the bot
+    * Added -goal -goaladd and -goalremove commands for tracking goals [#43](https://github.com/Mastereye7/JonBot/issues/43)
+    * Added new configs for bitsPerDollar and timeToWaitbetweenMessagesMillis
+    * Bit cheers automatically increase amount towards a goal using addGoalAmount
 * 1.8.0
     * Added automatic spins on resub [#37](https://github.com/Mastereye7/JonBot/issues/37)
     * Added automatic spins on bits cheers [#34](https://github.com/Mastereye7/JonBot/issues/34)
