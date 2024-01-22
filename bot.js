@@ -13,14 +13,18 @@ const restrictedCommands =
     'spins',
     'add',
     'spend',
-    'timer'
+    'timer',
+    'goal',
+    'goaladd',
+    'goalremove'
   ];
 const commonCommands =
   [
     'commands',
     'marco',
     'dice',
-    'spins'
+    'spins',
+    'goal'
   ]
 const commandPrefix = config.get('commandPrefix');
 
@@ -88,7 +92,7 @@ process.on('SIGTERM', handleSignalReceived);
  */
 function handleSignalReceived(signal) {
   console.info(`${signal} signal received`);
-  if (config.get('enableLoggingStartAndShutdown')){
+  if (config.get('enableLoggingStartAndShutdown')) {
     try {
       for (let i = 0; i < opts.channels.length; i++) {
         client.say(opts.channels[i], 'Shutting down');
@@ -137,31 +141,31 @@ function onMessageHandler(channel, userState, msg, self) {
     if (commandName === `${commandPrefix}commands`) {
       if (restrictedAccess) {
         client.say(channel, restrictedCommands.toString());
-      } 
+      }
       else {
         client.say(channel, commonCommands.toString());
       }
-    } 
-    else if (commandName === `${commandPrefix}marco`){
+    }
+    else if (commandName === `${commandPrefix}marco`) {
       client.say(channel, `polo`);
     }
     else if (commandName === `${commandPrefix}dice`) {
       const num = rollDice();
       client.say(channel, `You rolled a ${num}`);
-    } 
+    }
     else if (commandName === `${commandPrefix}randomboss` && restrictedAccess) {
       randomWorldBoss(channel);
-    } 
+    }
     else if (commandName === `${commandPrefix}add` && restrictedAccess) {
       const userName = splitMessage[1].replace('@', '');
       const amountToAdd = splitMessage[2];
       addWheelSpin(channel, userName, amountToAdd);
-    } 
+    }
     else if (commandName === `${commandPrefix}spend` && restrictedAccess) {
       const userName = splitMessage[1].replace('@', '');
       const amountToRemove = splitMessage[2];
       removeWheelSpin(channel, userName, amountToRemove);
-    } 
+    }
     else if (commandName === `${commandPrefix}spins` || commandName === `${commandPrefix}spings`) {
       let userName;
       if (restrictedAccess) {
@@ -173,13 +177,24 @@ function onMessageHandler(channel, userState, msg, self) {
       } else {
         userName = callerUserName;
       }
-      checkWheelSpins(channel, userName)
-    } 
+      checkWheelSpins(channel, userName);
+    }
     else if (commandName === `${commandPrefix}timer` && restrictedAccess) {
       const nameOfTimer = splitMessage[1];
       const minutesToWait = splitMessage[2];
       client.say(channel, `${nameOfTimer} ${minutesToWait} min`)
       setTimeout(signalTimerEnd, minutesToWait * 1000 * 60, channel, nameOfTimer);
+    }
+    else if (commandName === `${commandPrefix}goal`) {
+      printGoalAmount(channel, 'Goal');
+    }
+    else if (commandName === `${commandPrefix}goaladd` && restrictedAccess) {
+      const amountToAdd = splitMessage[1];
+      addGoalAmount(channel, 'Goal', amountToAdd);
+    }
+    else if (commandName === `${commandPrefix}goalremove` && restrictedAccess) {
+      const amountToRemove = splitMessage[1];
+      removeGoalAmount(channel, 'Goal', amountToRemove);
     }
     else {
       unknownCommand = true;
@@ -292,10 +307,10 @@ function removeWheelSpin(target, userName, amountToRemove) {
 
 /**
  * 
- * @param {string} target 
+ * @param {string} channel 
  * @param {string} userName 
  */
-function checkWheelSpins(target, userName) {
+function checkWheelSpins(channel, userName) {
   sql.connect(sqlConfig).then(pool => {
     // Query
     return pool.request()
@@ -309,10 +324,10 @@ function checkWheelSpins(target, userName) {
     if (recordset.length > 0) {
       spins = recordset[0].WheelSpins;
     }
-    client.say(target, `${userName} spins: [${spins}]`);
+    client.say(channel, `${userName} spins: [${spins}]`);
   }).catch(err => {
     console.log(err);
-    client.say(target, '¯\\_(ツ)_/¯');
+    client.say(channel, '¯\\_(ツ)_/¯');
     // ... error checks
   });
 }
@@ -320,6 +335,94 @@ function checkWheelSpins(target, userName) {
 function signalTimerEnd(channel, name) {
   console.log(`Timer ${name} has ended`);
   client.say(channel, `Timer ${name} has ended`);
+}
+
+/**
+ * Gets the amount of money donated towards a goal and says it to the channel
+ * @param {string} channel 
+ * @param {string} nameOfGoal 
+ */
+function printGoalAmount(channel, nameOfGoal) {
+  sql.connect(sqlConfig).then(pool => {
+    // Query
+    return pool.request()
+      .input('name', sql.NVarChar, nameOfGoal)
+      .query(
+        `SELECT * FROM dbo.Goal WHERE Name = @Name;`);
+  }).then(result => {
+    console.dir(result);
+    const recordset = result.recordset;
+    if (recordset.length <= 0) {
+      throw new Error(`No record found for ${nameOfGoal}`);
+    }
+    const amount = recordset[0].Amount;
+    client.say(channel, `${nameOfGoal} amount: $${amount}`);
+  }).catch(err => {
+    console.log(err);
+    client.say(channel, '¯\\_(ツ)_/¯');
+    // ... error checks
+  });
+}
+
+/**
+ * 
+ * @param {string} channel 
+ * @param {string} nameOfGoal 
+ * @param {number} amountToAdd 
+ */
+function addGoalAmount(channel, nameOfGoal, amountToAdd) {
+  if (nameOfGoal == null) return;
+  if (amountToAdd == null) return;
+  const valueToAdd = amountToAdd;
+  sql.connect(sqlConfig).then(pool => {
+    // Query
+    return pool.request()
+      .input('nameOfGoal', sql.NVarChar, nameOfGoal)
+      .input('value', sql.Int, valueToAdd)
+      .query(`
+        MERGE INTO Goal AS target
+    USING (VALUES (@nameOfGoal, @value)) AS source (Name, NewValue)
+    ON target.Name = source.Name
+    WHEN MATCHED THEN
+        UPDATE SET target.Amount = target.Amount + source.NewValue
+    WHEN NOT MATCHED THEN
+        INSERT (Name, Amount) VALUES (source.Name, source.NewValue);
+        `);
+  }).then(result => {
+    console.dir(result);
+    client.say(channel, `${nameOfGoal} increased $${valueToAdd}`);
+  }).catch(err => {
+    console.log(err);
+    client.say(channel, '¯\\_(ツ)_/¯');
+    // ... error checks
+  });
+}
+
+function removeGoalAmount(channel, nameOfGoal, amountToRemove) {
+  if (nameOfGoal == null) return;
+  if (amountToRemove == null) return;
+  const valueToRemove = amountToRemove;
+  sql.connect(sqlConfig).then(pool => {
+    // Query
+    return pool.request()
+      .input('nameOfGoal', sql.NVarChar, nameOfGoal)
+      .input('value', sql.Int, valueToRemove)
+      .query(
+        `MERGE INTO Goal AS target
+    USING (VALUES (@nameOfGoal, @value)) AS source (Name, NewValue)
+    ON target.Name = source.Name
+    WHEN MATCHED THEN
+        UPDATE SET target.Amount = target.Amount - source.NewValue
+    WHEN NOT MATCHED THEN
+        INSERT (Name, Amount) VALUES (source.Name, 0);`);
+  }).then(result => {
+    console.dir(result);
+    client.say(channel, `${nameOfGoal} decreased $${valueToRemove}`);
+  }).catch(err => {
+    console.log(err);
+    client.say(channel, '¯\\_(ツ)_/¯');
+    // ... error checks
+  });
 }
 
 // Called every time the bot connects to Twitch chat
@@ -361,7 +464,7 @@ function onSubscriptionHandler(channel, username, methods, message, userstate) {
  * @param {tmi.SubMethods} methods Methods and plan used to subscribe
  * @param {tmi.SubGiftUserstate} userstate Userstate object
  */
-function onGiftSubHandler(channel, username, streakMonths, recipient, methods, userstate){
+function onGiftSubHandler(channel, username, streakMonths, recipient, methods, userstate) {
   const displayName = userstate['display-name'];
   console.log(`Gift sub received ${displayName} to ${recipient}`);
   addWheelSpin(channel, displayName, 1);
@@ -376,7 +479,7 @@ function onGiftSubHandler(channel, username, streakMonths, recipient, methods, u
  * @param {string} rewardType 
  * @param {tmi.ChatUserstate} tags 
  */
-function onRedeemHandler(channel, username, rewardType, tags){
+function onRedeemHandler(channel, username, rewardType, tags) {
   const displayName = tags['display-name'];
   console.log(`Redeem received ${displayName} ${rewardType}`);
   client.say(channel, `${rewardType}`);
@@ -393,7 +496,7 @@ function onRedeemHandler(channel, username, rewardType, tags){
 userstate["msg-param-should-share-streak"]: Boolean - User decided to share their sub streak
  * @param {tmi.SubMethods} methods Resub methods and plan (such as Prime)
  */
-function onResubHandler(channel, username, months, message, userstate, methods){
+function onResubHandler(channel, username, months, message, userstate, methods) {
   const displayName = userstate['display-name'];
   console.log(`Resub received ${displayName}`);
   addWheelSpin(channel, displayName, 1);
@@ -418,6 +521,18 @@ function onCheerHandler(channel, userstate, message) {
   console.log(`amountOfSpinsWholeNumber: ${amountOfSpinsWholeNumber}`);
   if (amountOfSpinsWholeNumber >= 1) {
     addWheelSpin(channel, displayName, amountOfSpinsWholeNumber);
+  }
+  
+  const bitsPerDollar = config.get('bitsPerDollar');
+  const amountOfDollars = bits / bitsPerDollar;
+  console.log(`amountOfDollars: ${amountOfDollars}`);
+  const amountOfDollarsWholeNumber = Math.floor(amountOfDollars);
+  console.log(`amountOfDollarsWholeNumber: ${amountOfDollarsWholeNumber}`);
+  if (amountOfDollarsWholeNumber >= 1) {
+    const timeToWaitbetweenMessagesMillis = config.get('timeToWaitbetweenMessagesMillis');
+    console.log(`timeToWaitbetweenMessagesMillis: ${timeToWaitbetweenMessagesMillis}`);
+    setTimeout(addGoalAmount, timeToWaitbetweenMessagesMillis, channel, 'Goal', amountOfDollarsWholeNumber);
+    // addGoalAmount(channel, 'Goal', amountOfDollarsWholeNumber);
   }
   console.log(`* Finished executing cheer handler ${displayName} ${bits} bits`);
 }

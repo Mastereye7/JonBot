@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.<br>
-Version: 1.8.0
+Version: 1.9.0
 
 ## Description
 
@@ -20,14 +20,20 @@ The bot will connect to a Twitch chat set in the config and listen for commands 
 ### Common commands
 * **-commands**<br>
 Shows all the available commands for the user
+* **-marco**<br>
+Pings the bot to see if they are alive (hellooo?)
 * **-dice**<br>
 Picks a random number from 1-100
 * **-spins**<br>
 Shows wheel spins the calling user has.
+* **-goal**<br>
+Shows the current goal amount in dollars
 
 ### Restricted commands
 * **-commands**<br>
 Shows all the available restricted commands for the user
+* **-marco**<br>
+Pings the bot to see if they are alive (hellooo?)
 * **-randomboss**<br>
 Picks a random Genshin world boss from a list.
 * **-spins @user**<br>
@@ -42,6 +48,12 @@ Spends 1 spin of the wheel for a user.
 Spends an amount of spins of the wheel for a user.
 * **-timer (name) (minutes)**<br>
 Sets a named timer in minutes.
+* **-goal**<br>
+Shows the current goal amount in dollars
+* **-goaladd (amount)**<br>
+Adds amount of dollars towards the goal
+* **-goalremove (amount)**<br>
+Removed amount of dollars towards the goal
 
 ### `-commands`
 Example: <br>
@@ -51,6 +63,15 @@ Output: <br>
 Description:<br>
 Shows the available commands for the user. <br>
 If the user has restricted access, shows more commands.
+
+### `-marco`
+Example: <br>
+`-marco` <br>
+Output: <br>
+`polo` <br>
+Description:<br>
+Lets the user know if the bot is still alive and kicking. <br>
+Bot will try to say 'polo' back.
 
 ### `-randomboss`
 Example: <br>
@@ -114,6 +135,36 @@ Sets a timer with a certain amount of time. When timer ends, bot chats the timer
 | nameOfTimer | Yes | Name of the timer to start. Cannot have any spaces. (ex. MyTimer) |
 | minutesToDelay |  Yes | Amount of minutes to wait. Decimals are okay (ex. 5, 0.5, 2) |
 
+### `-goal`
+Example: <br>
+`-goal`<br>
+Output: <br>
+`Goal amount $10` <br>
+Description:<br> 
+Shows the amount of dollars gained towards a goal. Right now goes to only one goal called "Goal" but could be further developed in the future.
+
+### `-goaladd {amount}`
+Example: <br>
+`-goaladd 4`<br>
+Output: <br>
+`Goal increased $4` <br>
+Description:<br> 
+Adds an amount of dollars towards the goal. Amount has to be a whole number in dollars.
+| Parameter | Required? | Description |
+| --------- | --------- | ----------- |
+| amount | Yes | Integer amount of dollars to add to a goal. (ex. 5, 10, 2) |
+
+### `-goalRemove {amount}`
+Example: <br>
+`-goalremove 12`<br>
+Output: <br>
+`Goal decreased $12` <br>
+Description:<br> 
+Removes an amount of dollars towards the goal. Amount has to be a whole number in dollars.
+| Parameter | Required? | Description |
+| --------- | --------- | ----------- |
+| amount | Yes | Integer amount of dollars to remove from a goal. (ex. 5, 10, 2) |
+
 ## Getting Started
 
 ### Dependencies
@@ -150,7 +201,9 @@ Sets a timer with a certain amount of time. When timer ends, bot chats the timer
     "remoteFromChannel": "#{channel}",
     "remoteToChannel": "#{channel}",
     "enableLoggingStartAndShutdown": false,
-    "bitsPerSpin": 200
+    "bitsPerSpin": 200,
+    "bitsPerDollar": 100,
+    "timeToWaitbetweenMessagesMillis": 800
 }
 ```
 
@@ -176,6 +229,8 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
+* 1.9.0
+    * 
 * 1.8.0
     * Added automatic spins on resub [#37](https://github.com/Mastereye7/JonBot/issues/37)
     * Added automatic spins on bits cheers [#34](https://github.com/Mastereye7/JonBot/issues/34)
