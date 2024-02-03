@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.<br>
-Version: 1.9.1
+Version: 1.10.0-beta
 
 ## Description
 
@@ -229,6 +229,8 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
+* 1.10.1
+    *
 * 1.9.1
     * Moved Powershell scripts to seperate folder for cleaner structure
 * 1.9.0

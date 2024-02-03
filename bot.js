@@ -6,25 +6,29 @@ console.log(`NODE_ENV: ${process.env['NODE_ENV']}`)
 
 const restrictedCommands =
   [
-    'commands',
-    'marco',
-    'dice',
-    'randomboss',
-    'spins',
-    'add',
-    'spend',
-    'timer',
-    'goal',
-    'goaladd',
-    'goalremove'
+    'commands ',
+    'marco ',
+    'dice ',
+    'randomboss ',
+    'spins ',
+    'usespins (amount) ',
+    'add (user) (amount) ',
+    'spend (user) (amount) ',
+    'timer (name) (minutes) ',
+    'goal ',
+    'goaladd (amount) ',
+    'goalremove (amount) '
   ];
 const commonCommands =
   [
-    'commands',
-    'marco',
-    'dice',
-    'spins',
-    'goal'
+    'commands ',
+    'marco ',
+    'dice ',
+    'randomboss ',
+    'spins ',
+    'usespins (amount) ',
+    'timer (name) (minutes) ',
+    'goal '
   ]
 const commandPrefix = config.get('commandPrefix');
 
@@ -153,7 +157,7 @@ function onMessageHandler(channel, userState, msg, self) {
       const num = rollDice();
       client.say(channel, `You rolled a ${num}`);
     }
-    else if (commandName === `${commandPrefix}randomboss` && restrictedAccess) {
+    else if (commandName === `${commandPrefix}randomboss`) {
       randomWorldBoss(channel);
     }
     else if (commandName === `${commandPrefix}add` && restrictedAccess) {
@@ -164,6 +168,11 @@ function onMessageHandler(channel, userState, msg, self) {
     else if (commandName === `${commandPrefix}spend` && restrictedAccess) {
       const userName = splitMessage[1].replace('@', '');
       const amountToRemove = splitMessage[2];
+      removeWheelSpin(channel, userName, amountToRemove);
+    }
+    else if (commandName === `${commandPrefix}usespins`) {
+      const userName = callerUserName;
+      const amountToRemove = splitMessage[1];
       removeWheelSpin(channel, userName, amountToRemove);
     }
     else if (commandName === `${commandPrefix}spins` || commandName === `${commandPrefix}spings`) {
@@ -179,7 +188,7 @@ function onMessageHandler(channel, userState, msg, self) {
       }
       checkWheelSpins(channel, userName);
     }
-    else if (commandName === `${commandPrefix}timer` && restrictedAccess) {
+    else if (commandName === `${commandPrefix}timer`) {
       const nameOfTimer = splitMessage[1];
       const minutesToWait = splitMessage[2];
       client.say(channel, `${nameOfTimer} ${minutesToWait} min`)
