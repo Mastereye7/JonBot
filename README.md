@@ -249,7 +249,10 @@ Contributors names and contact info
 
 ## Version History
 * 1.10.0
-    * 
+    * Removed restricted from some commands (-randomboss, -timer)
+    * Added -usespins [#51](https://github.com/Mastereye7/JonBot/issues/51)
+    * Formatted -commands print better
+    * Added scripts for starting the bot without getting Twitch token again
 * 1.9.1
     * Moved Powershell scripts to seperate folder for cleaner structure
 * 1.9.0
