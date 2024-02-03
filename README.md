@@ -1,7 +1,7 @@
 # Jon Bot
 
 Bot created to listen to and integrate with Twitch chat.<br>
-Version: 1.10.0-beta
+Version: 1.10.0
 
 ## Description
 
@@ -22,10 +22,16 @@ The bot will connect to a Twitch chat set in the config and listen for commands 
 Shows all the available commands for the user
 * **-marco**<br>
 Pings the bot to see if they are alive (hellooo?)
+* **-randomboss**<br>
+Picks a random Genshin world boss from a list.
 * **-dice**<br>
 Picks a random number from 1-100
 * **-spins**<br>
 Shows wheel spins the calling user has.
+* **-usespins**<br>
+Lets the calling user spend their spins
+* **-timer (name) (minutes)**<br>
+Sets a named timer in minutes.
 * **-goal**<br>
 Shows the current goal amount in dollars
 
@@ -38,6 +44,8 @@ Pings the bot to see if they are alive (hellooo?)
 Picks a random Genshin world boss from a list.
 * **-spins @user**<br>
 Shows wheel spins a user has.
+* **-usespins**<br>
+Lets the calling user spend their spins
 * **-add @user**<br>
 Adds 1 spin to the wheel spins of a user.
 * **-add @user (amount)**<br>
@@ -95,6 +103,17 @@ Shows the spins available for @user.
 | Parameter | Required? | Description |
 | --------- | --------- | ----------- |
 | @userName | No | Could be plain text userName or tag (@) (ex. @TwitchJonBot) |
+
+#### `-usespins {amountToRemove}`
+Example: <br>
+`-usespins 4`<br>
+Output: <br>
+`TwitchJonBot spends spins [-4]`<br> 
+Description:<br> 
+Spends the spins of the calling user.
+| Parameter | Required? | Description |
+| --------- | --------- | ----------- |
+| amountToRemove | Yes | Positive integer number of spins to spend of the calling user (ex. 3) |
 
 #### `-add {@userName} opt: {amountToAdd = 1}`
 Example: <br>
@@ -229,8 +248,8 @@ Contributors names and contact info
 [@Mastereye7](https://twitter.com/Mastereye7)
 
 ## Version History
-* 1.10.1
-    *
+* 1.10.0
+    * 
 * 1.9.1
     * Moved Powershell scripts to seperate folder for cleaner structure
 * 1.9.0

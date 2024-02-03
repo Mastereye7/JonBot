@@ -6,29 +6,29 @@ console.log(`NODE_ENV: ${process.env['NODE_ENV']}`)
 
 const restrictedCommands =
   [
-    'commands ',
-    'marco ',
-    'dice ',
-    'randomboss ',
-    'spins ',
-    'usespins (amount) ',
-    'add (user) (amount) ',
-    'spend (user) (amount) ',
-    'timer (name) (minutes) ',
-    'goal ',
-    'goaladd (amount) ',
-    'goalremove (amount) '
+    'commands',
+    'marco',
+    'dice',
+    'randomboss',
+    'spins',
+    'usespins (amount)',
+    'add (user) (amount)',
+    'spend (user) (amount)',
+    'timer (name) (minutes)',
+    'goal',
+    'goaladd (amount)',
+    'goalremove (amount)'
   ];
 const commonCommands =
   [
-    'commands ',
-    'marco ',
-    'dice ',
-    'randomboss ',
-    'spins ',
-    'usespins (amount) ',
-    'timer (name) (minutes) ',
-    'goal '
+    'commands',
+    'marco',
+    'dice',
+    'randomboss',
+    'spins',
+    'usespins (amount)',
+    'timer (name) (minutes)',
+    'goal'
   ]
 const commandPrefix = config.get('commandPrefix');
 
@@ -144,10 +144,10 @@ function onMessageHandler(channel, userState, msg, self) {
   try {
     if (commandName === `${commandPrefix}commands`) {
       if (restrictedAccess) {
-        client.say(channel, restrictedCommands.toString());
+        client.say(channel, restrictedCommands.join(", "));
       }
       else {
-        client.say(channel, commonCommands.toString());
+        client.say(channel, commonCommands.join(", "));
       }
     }
     else if (commandName === `${commandPrefix}marco`) {
