@@ -9,7 +9,7 @@
   "author": "Mastereye7",
   "license": "ISC",
   "dependencies": {
-    "config": "^3.3.10",
+    "config": "^3.3.11",
     "mssql": "^10.0.2",
     "tmi.js": "^1.8.5"
   }
