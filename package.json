@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "config": "^3.3.12",
-    "mssql": "^11.0.1",
+    "mssql": "^12.2.0",
     "tmi.js": "^1.8.5"
   }
 }
